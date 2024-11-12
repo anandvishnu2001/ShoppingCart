@@ -54,8 +54,7 @@ $(document).ready(function () {
           type: 'file',
           name: 'productPics',
           class: 'form-control text-warning',
-          accept: 'image/*',
-          required: true
+          accept: 'image/*'
         })
       ); 
     });
@@ -165,7 +164,7 @@ $(document).ready(function () {
                               $('#imageModify').removeClass("d-none");
                               $.each(productObj[0].images, function(_, value) {
                                 $('#imageList').append(
-                                  $('<li>').addClass('list-group-item')
+                                  $('<li>').addClass('col-3 card')
                                     .append(
                                       $('<img>').attr({
                                         src: `/uploads/${value.image}`,
@@ -174,6 +173,10 @@ $(document).ready(function () {
                                         'data-bs-theme': 'dark',
                                         width: 100
                                       })
+                                    ).append(
+                                      $('<button>').attr({
+                                        class: 'btn btn-danger'
+                                      }).html('Remove')
                                     )
                                 );
                               });

@@ -241,14 +241,11 @@
 
     <cffunction  name="modifyProduct" access="public">
         <cfargument  name="data" type="struct" required="true">
-        <cfset local.key = arguments.data.id>
-        <cfdump  var="#arguments.data#" abort>
         <cfif arguments.data.action EQ "add">
             <cfquery name="local.add" datasource="shopping" result="result">
                 INSERT INTO
                     product(
                         name,
-                        image,
                         description,
                         price,
                         tax,
@@ -259,7 +256,6 @@
                     )
                 VALUES(
                     <cfqueryparam value="#arguments.data.name#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#arguments.data.image#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#arguments.data.description#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#arguments.data.price#" cfsqltype="cf_sql_decimal">,
                     <cfqueryparam value="#arguments.data.tax#" cfsqltype="cf_sql_integer">,
@@ -275,9 +271,6 @@
                 UPDATE
                     product
                 SET
-                    <cfif structKeyExists(arguments.data, 'image')>
-                        image = <cfqueryparam value="#arguments.data.image#" cfsqltype="cf_sql_varchar">,
-                    </cfif>
                     name = <cfqueryparam value="#arguments.data.name#" cfsqltype="cf_sql_varchar">,
                     description = <cfqueryparam value="#arguments.data.description#" cfsqltype="cf_sql_varchar">,
                     price = <cfqueryparam value="#arguments.data.price#" cfsqltype="cf_sql_decimal">,
@@ -288,6 +281,27 @@
                 WHERE
                     productid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_varchar">
             </cfquery>
+            <cfset local.key = arguments.data.id>
+        </cfif>
+        <cfif arrayLen(arguments.data.images) NEQ 0>
+            <cfquery name="local.image" datasource="shopping">
+                INSERT INTO
+                    image(
+                        productid,
+                        image,
+                        status
+                    )
+                VALUES
+                    <cfloop array="#arguments.data.images#" item="pic">
+                        (
+                            <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">,
+                            <cfqueryparam value="#pic#" cfsqltype="cf_sql_varchar">,
+                            <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                        )
+                        <cfif arrayLast(arguments.data.images) NEQ pic>,</cfif>
+                    </cfloop>
+                ;
+            </cfquery>
         </cfif>
         <cfset local.sub = {
             action: 'edit',
@@ -296,6 +310,23 @@
             admin: arguments.data.admin
         }>
         <cfset variable = modifySubcategory(local.sub)>
+    </cffunction>
+
+    <cffunction  name="deleteImage" access="remote" returnFormat="JSON">
+        <cfargument  name="image" type="integer" required="false">
+        <cfargument  name="product" type="integer" required="false">
+        <cfquery name="local.edit" datasource="shopping" result="result">
+            UPDATE
+                image
+            SET
+                status = 0
+            WHERE
+                <cfif structKeyExists(arguments, 'cart')>
+                    imageid = <cfqueryparam value="#arguments.image#" cfsqltype="cf_sql_integer">
+                <cfelseif structKeyExists(arguments, 'user')>
+                    productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
+                </cfif>
+        </cfquery>
     </cffunction>
 
     <cffunction  name="getCategory" access="remote" returnFormat="JSON">
@@ -551,7 +582,7 @@
 
     <cffunction  name="deleteCart" access="remote" returnFormat="JSON">
         <cfargument  name="cart" type="integer" required="false">
-        <cfargument  name="user" type="string" required="false">
+        <cfargument  name="user" type="integer" required="false">
         <cfquery name="local.edit" datasource="shopping" result="result">
             UPDATE
                 cart

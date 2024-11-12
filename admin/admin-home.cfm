@@ -131,17 +131,32 @@
                             <cfelse>
                                 <cfoutput>
                                     <cfloop array="#products#" index="product">
-                                    <li class="row list-group-item d-flex justify-content-end">
-                                        <div class="col-7 d-flex flex-column gap-2">
-                                            <div class="d-flex gap-2">
-                                                <p class="py-2 px-3">#product.name#</p>
-                                                <p class="py-2 px-3">#product.price#</p>
+                                    <li class="row list-group-item d-flex justify-content-between">
+                                        <div class="col-7 d-flex gap-2">
+                                            <div id="productpic#product.id#" class="flex-grow-1 carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    <cfloop array="#product.images#" index="index" item="image">
+                                                        <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                            <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                                        </div>
+                                                    </cfloop>
                                                 </div>
-                                            <p class="py-2 px-3">#product.description#</p>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#product.id#" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon"></span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#product.id#" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon"></span>
+                                                </button>
+                                            </div>
+                                            <div class="col-5 d-flex flex-column gap-2">
+                                                <div class="d-flex gap-2">
+                                                    <p class="py-2 px-3">#product.name#</p>
+                                                    <p class="py-2 px-3">#product.price#</p>
+                                                    </div>
+                                                <p class="py-2 px-3">#product.description#</p>
+                                            </div>
                                         </div>
-                                        <div class="col-4 d-flex flex-column gap-2">
-                                            <ul class="list-group list-group-horizontal">
-                                            </ul>
+                                        <div class="col-3 d-flex flex-column gap-2">
                                             <div class="d-flex gap-2">
                                                 <button class="btn btn-sm fw-bold btn-outline-success btn-block" data-bs-toggle="modal"
                                                     data-bs-target="#chr(35)#modal" data-bs-action="edit" data-bs-set="product"
@@ -215,8 +230,8 @@
                                     <label for="tax" class="form-label text-light">Tax Rate(%)</label>
                                 </div>
                                 <div id="imageModify" class="d-flex flex-column form-floating">
-                                    <ul id="imageList" class="list-group list-group-horizontal">
-                                    </ul>
+                                    <div id="imageList" class="d-flex flex-wrap p-1 gap-1">
+                                    </div>
                                     <button id="addImagebtn" class="btn btn-outline-primary fw-bold">Add Image</button>
                                     <div id="imageAdd" class="list-group p-1 gap-1"></div>
                                 </div>
