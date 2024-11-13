@@ -146,7 +146,7 @@
                             </button>
                         </form>
                     </div>
-                    <div class="card-body overflow-y-scroll d-grid gap-5 m-2">
+                    <div class="card-body overflow-y-scroll d-grid gap-5 m-1">
                         <cfif structKeyExists(url, 'keyword')>
                             <cfset variables.orders = control.getOrder(user=session.user.user,search=url.keyword)>
                         <cfelse>
@@ -160,13 +160,29 @@
                                             <span class="text-white">Order No :</span>
                                             <span class="text-muted">#order.id#</span>
                                         </h5>
-                                        <a class="btn btn-danger" href="order-invoice.cfm?order=#order.id#">pdf</a>
+                                        <a class="btn btn-danger" href="order-invoice.cfm?order=#order.id#">pdf
+                                        </a>
                                     </div>
                                     <cfset variables.total = 0>
                                     <cfset variables.tax = 0>
                                     <ul class="card-body list-group p-0">
                                         <cfloop array="#order.items#" item="item">
                                             <li class="list-group-item d-flex justify-content-between">
+                                                <div id="productpic#item.product#" class="card-img carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                                    <div class="carousel-inner">
+                                                        <cfloop array="#item.images#" index="index" item="image">
+                                                            <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                                <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                                            </div>
+                                                        </cfloop>
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"></span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"></span>
+                                                    </button>
+                                                </div>
                                                 <div class="col-7 d-flex flex-column">
                                                     <p class="card-text">
                                                         <span class="text-dark">Item :</span>

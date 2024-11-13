@@ -315,15 +315,15 @@
     <cffunction  name="deleteImage" access="remote" returnFormat="JSON">
         <cfargument  name="image" type="integer" required="false">
         <cfargument  name="product" type="integer" required="false">
-        <cfquery name="local.edit" datasource="shopping" result="result">
+        <cfquery name="local.edit" datasource="shopping">
             UPDATE
                 image
             SET
                 status = 0
             WHERE
-                <cfif structKeyExists(arguments, 'cart')>
+                <cfif structKeyExists(arguments, 'image')>
                     imageid = <cfqueryparam value="#arguments.image#" cfsqltype="cf_sql_integer">
-                <cfelseif structKeyExists(arguments, 'user')>
+                <cfelseif structKeyExists(arguments, 'product')>
                     productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
                 </cfif>
         </cfquery>
@@ -908,6 +908,7 @@
             <cfloop array="#local.items#" index="index" item="item">
                 <cfset local.product = getProduct(product=item.product,status="nostatus")>
                 <cfset local.items[index]['name'] = local.product[1].name>
+                <cfset local.items[index]['images'] = local.product[1].images>
             </cfloop>
             <cfset arrayAppend(local.output, {
                 "id" : local.list.orderid,

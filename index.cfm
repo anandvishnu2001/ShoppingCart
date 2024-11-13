@@ -150,8 +150,15 @@
                     <cfoutput>
                         <a class="card bg-light text-decoration-none fw-bold col-3 p-3" href="product.cfm?pro=#product.id#">
                             <div class="card-body d-flex row flex-wrap">
-                                <img class="card-img col-md-6 w-50 h-auto img-fluid img-thumbnail" src="/uploads/#product.image#"
-                                    alt="Card image" data-bs-theme="dark">
+                                <div id="productpic#product.id#" class="card-img col-md-6 w-50 carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <cfloop array="#product.images#" index="index" item="image">
+                                            <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                            </div>
+                                        </cfloop>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 d-flex flex-column justify-content-evenly fw-bold">
                                     <p class="h4 card-title text-info">#product.name#</p>
                                     <p class="card-text text-danger">#product.price#</p>

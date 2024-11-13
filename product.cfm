@@ -81,8 +81,21 @@
                     </div>
                     <div class="card bg-light w-75 fw-bold p-5">
                         <div class="card-body d-flex row flex-wrap gap-5">
-                            <img class="card-img col-md-6 w-25 h-auto img-fluid img-thumbnail" src="/uploads/#products[1].image#"
-                                alt="Card image" data-bs-theme="dark">
+                            <div id="productpic#products[1].id#" class="card-img col-md-6 w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                <div class="carousel-inner">
+                                    <cfloop array="#products[1].images#" index="index" item="image">
+                                        <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                            <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                        </div>
+                                    </cfloop>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#products[1].id#" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#products[1].id#" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            </div>
                             <div class="col-md-6 d-flex flex-column justify-content-evenly align-items-center fw-bold">
                                 <h1 class="card-title text-dark">#products[1].name#</h1>
                                 <h3 class="card-text text-muted">#products[1].description#</h3>

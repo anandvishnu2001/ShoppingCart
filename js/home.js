@@ -12,7 +12,7 @@ function changeQuantity(id,change) {
             "quantity": change
         },
         success: function(data){
-            location.reload();
+            window.location.href = window.location.href;
         }
     });
 }
@@ -25,7 +25,7 @@ function removeCartProduct(id) {
             "cart": id
         },
         success: function(data){
-            location.reload();
+            window.location.href = window.location.href;
         }
     });
 }
@@ -43,7 +43,7 @@ function removeCart(id) {
             "user": id
         },
         success: function(data){
-            location.reload();
+            window.location.href = window.location.href;
         }
     });
 }

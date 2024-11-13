@@ -232,7 +232,7 @@
                                 <div id="imageModify" class="d-flex flex-column form-floating">
                                     <div id="imageList" class="d-flex flex-wrap p-1 gap-1">
                                     </div>
-                                    <button id="addImagebtn" class="btn btn-outline-primary fw-bold">Add Image</button>
+                                    <button type="button" id="addImagebtn" class="btn btn-outline-primary fw-bold">Add Image</button>
                                     <div id="imageAdd" class="list-group p-1 gap-1"></div>
                                 </div>
                             </fieldset>

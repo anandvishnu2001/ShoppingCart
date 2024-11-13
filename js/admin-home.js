@@ -1,8 +1,20 @@
+function removeImage(id) {
+  $.ajax({
+      url: '/components/control.cfc?method=deleteImage',
+      type: 'GET',
+      data: {
+          "image": id
+      },
+      success: function(data){
+        $(`#image-${id}`).remove();
+      }
+  });
+}
+
 $(document).ready(function () {
   $('#subcategories').hide();
   
   $('#products').hide();
-
 
   const url = new URLSearchParams(window.location.search);
 
@@ -21,6 +33,7 @@ $(document).ready(function () {
     $('#imageAdd').html('');
     $('#recordId').val('');
     $('#set').val('');
+    window.location.href = window.location.href;
   });
 
   $('#modal').on('shown.bs.modal',function(event){
@@ -164,8 +177,10 @@ $(document).ready(function () {
                               $('#imageModify').removeClass("d-none");
                               $.each(productObj[0].images, function(_, value) {
                                 $('#imageList').append(
-                                  $('<li>').addClass('col-3 card')
-                                    .append(
+                                  $('<li>').attr({
+                                      class: 'col-3 card',
+                                      id: `image-${value.id}`,
+                                    }).append(
                                       $('<img>').attr({
                                         src: `/uploads/${value.image}`,
                                         class: 'img-thumbnail',
@@ -175,7 +190,9 @@ $(document).ready(function () {
                                       })
                                     ).append(
                                       $('<button>').attr({
-                                        class: 'btn btn-danger'
+                                        type: 'button',
+                                        class: 'btn btn-danger',
+                                        onclick: `removeImage(${value.id})`
                                       }).html('Remove')
                                     )
                                 );

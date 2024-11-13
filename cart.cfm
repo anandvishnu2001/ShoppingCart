@@ -62,8 +62,21 @@
                                     <li class="list-group-item d-flex flex-column gap-3 p-5">
                                         <cfset variables.cartProduct = control.getProduct(product=item.product)>
                                         <div class="d-flex flex-row flex-wrap justify-content-evenly">
-                                            <img class="card-img w-25 h-auto img-fluid img-thumbnail" src="/uploads/#variables.cartProduct[1].image#"
-                                                alt="Card image" data-bs-theme="dark">
+                                            <div id="productpic#variables.cartProduct[1].id#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                                <div class="carousel-inner">
+                                                    <cfloop array="#variables.cartProduct[1].images#" index="index" item="image">
+                                                        <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                            <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                                        </div>
+                                                    </cfloop>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#variables.cartProduct[1].id#" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon"></span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#variables.cartProduct[1].id#" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon"></span>
+                                                </button>
+                                            </div>
                                             <div class="col-5 d-flex flex-column justify-content-evenly fw-bold">
                                                 <p class="h4 card-title text-info">#variables.cartProduct[1].name#</p>
                                                 <cfset variables.cartTotal += (variables.cartProduct[1].price+(variables.cartProduct[1].price*variables.cartProduct[1].tax/100))*item.quantity>
