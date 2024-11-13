@@ -7,6 +7,7 @@
 <cfelse>
     <cflocation url="login.cfm" addToken="no">
 </cfif>
+<cfset control.paymentMail(order=url.order)>
 <html lang="en">
 	<head>
 		<link href="/css/admin.css" rel="stylesheet">
@@ -20,8 +21,11 @@
             </a>
 		</nav>
         <div class="container-fluid h-100 d-flex flex-row justify-content-center align-items-center gap-5 p-5 mt-5">
-            <div class="card bg-light col-6 p-3 gap-5 p-5">
-                <div class="alert alert-success text-center h2 fw-bold">Payment Successful!!!</div>
+            <div class="card d-grid bg-light col-6 p-3 gap-5 p-5">
+                <h2 class="alert alert-success fw-bold">
+                    <img src="/images/success.png" width="100" height="100" class="img-fluid">
+                    Payment Successful!!!
+                </h2>
                 <a class="btn btn-outline-dark fw-bold" <cfoutput>href="user.cfm?keyword=#url.order#"</cfoutput>>Order Details</a>
                 <a class="btn btn-outline-primary fw-bold" href="index.cfm">Continue Exploring</a>
             </div>

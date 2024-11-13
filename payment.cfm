@@ -46,6 +46,7 @@
     <cfelse>
         <div class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            Payment Filed!!! Due to:
             <cfoutput>
                 #arrayToList(variables.output.error)#
             </cfoutput>
@@ -169,7 +170,7 @@
                             </cfloop>
                         </ul>
                     <cfelse>
-                        <h1 class="text-center text-warning">Order Item not Selected!!</h1>
+                        <h1 class="bg-warning shadow text-center text-dark">Order Item not Selected!!</h1>
                     </cfif>
                 </div>
             </div>

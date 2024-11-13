@@ -168,7 +168,7 @@
                     </cfoutput>
                 </cfloop>
             <cfelse>
-                <h1 class="text-center text-warning">Products items Empty!!</h1>
+                <h1 class="bg-warning shadow text-center text-dark">Products items Empty!!</h1>
             </cfif>
         </div>
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" data-bs-theme="dark">

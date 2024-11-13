@@ -113,7 +113,7 @@
                     </div>
                 </cfoutput>
             <cfelse>
-                <h1 class="text-center text-warning">Product Not Selected!!</h1>
+                <h1 class="bg-warning shadow text-center text-dark">Product Not Selected!!</h1>
             </cfif>
         </div>
 		<script type="text/javascript" src="/js/jQuery.js"></script>

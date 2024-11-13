@@ -284,17 +284,17 @@
                                     <fieldset class="d-flex flex-wrap border border-2 rounded gap-5 p-3">
                                         <legend>Password</legend>
                                         <div class="col-5 form-floating">
-                                            <input class="form-control bg-primary text-light fw-bold" type="text" id="currentPassword"
+                                            <input class="form-control bg-primary text-light fw-bold" type="password" id="currentPassword"
                                                 name="currentPassword" placeholder="">
                                             <label for="currentPassword" class="form-label">Current Password</label>
                                         </div>
                                         <div class="col-5 form-floating">
-                                            <input class="form-control bg-primary text-light fw-bold" type="text" id="newPassword"
+                                            <input class="form-control bg-primary text-light fw-bold" type="password" id="newPassword"
                                                 name="newPassword" placeholder="">
                                             <label for="newPassword" class="form-label">New Password</label>
                                         </div>
                                         <div class="col-5 form-floating">
-                                            <input class="form-control bg-primary text-light fw-bold" type="text" id="confirmPassword"
+                                            <input class="form-control bg-primary text-light fw-bold" type="password" id="confirmPassword"
                                                 name="confirmPassword" placeholder="">
                                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                                         </div>

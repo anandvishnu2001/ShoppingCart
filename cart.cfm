@@ -94,7 +94,7 @@
                             </cfloop>
                     <cfelseif session.user.access>
                         <div class="col-md-6 col-12 d-grid mx-auto">
-                            <h1 class="text-center text-warning">Cart is Empty!!</h1>
+                            <h1 class="bg-warning shadow text-center text-dark">Cart is Empty!!</h1>
                             <a class="btn btn-outline-info" href="index.cfm">Explore our products</a>
                         </div>
                     <cfelse>
