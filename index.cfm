@@ -122,7 +122,7 @@
                 </ul>
             </nav>
         </cfif>
-        <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel" data-bs-theme="dark">
+        <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel">
                 <div class="carousel-inner h-100">
                     <div class="carousel-item active">
                         <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
