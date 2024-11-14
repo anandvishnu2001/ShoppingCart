@@ -17,7 +17,7 @@
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
             <a class="flex-grow-1 navbar-brand ms-2" href="index.cfm">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
-                Shopping Cart
+                ShopKart
             </a>
 		</nav>
         <div class="container-fluid h-100 d-flex flex-row justify-content-center align-items-center gap-5 p-5 mt-5">

@@ -2,7 +2,7 @@
     <cffunction  name="adminLogin" access="public">
         <cfargument  name="admin" type="string" required="true">
         <cfargument  name="password" type="string" required="true">
-        <cfquery name="local.checkLog" datasource="shopping">
+        <cfquery name="local.checkLog">
             SELECT
                 adminid,
                 name,
@@ -33,7 +33,7 @@
         <cfset local.message = "">
         <cfif len(arguments.user) NEQ 0 
             AND len(arguments.password) NEQ 0>
-                <cfquery name="local.checkLog" datasource="shopping">
+                <cfquery name="local.checkLog">
                     SELECT
                         userid,
                         username,
@@ -74,7 +74,7 @@
         <cfset local.message = "">
         <cfif len(arguments.user) NEQ 0 
             AND len(arguments.email) NEQ 0>
-                <cfquery name="local.checkLog" datasource="shopping">
+                <cfquery name="local.checkLog">
                     SELECT
                         email
                     FROM
@@ -83,7 +83,7 @@
                         email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
                 </cfquery>
                 <cfif local.checkLog.recordCount EQ 0>
-                    <cfquery name="local.checkLog" datasource="shopping">
+                    <cfquery name="local.checkLog">
                         UPDATE
                             user
                         SET
@@ -173,7 +173,7 @@
     <cffunction  name="modifyCategory" access="public">
         <cfargument  name="data" type="struct" required="true">
         <cfif arguments.data.action EQ "add">
-            <cfquery name="local.add" datasource="shopping">
+            <cfquery name="local.add">
                 INSERT INTO
                     category(
                         name,
@@ -189,7 +189,7 @@
                 );
             </cfquery>
         <cfelseif arguments.data.action EQ "edit">
-            <cfquery name="local.edit" datasource="shopping">
+            <cfquery name="local.edit">
                 UPDATE
                     category
                 SET
@@ -205,7 +205,7 @@
     <cffunction  name="modifySubcategory" access="public">
         <cfargument  name="data" type="struct" required="true">
         <cfif arguments.data.action EQ "add">
-            <cfquery name="local.add" datasource="shopping">
+            <cfquery name="local.add">
                 INSERT INTO
                     subcategory(
                         name,
@@ -223,7 +223,7 @@
                 );
             </cfquery>
         <cfelseif arguments.data.action EQ "edit">
-            <cfquery name="local.edit" datasource="shopping">
+            <cfquery name="local.edit">
                 UPDATE
                     subcategory
                 SET
@@ -242,7 +242,7 @@
     <cffunction  name="modifyProduct" access="public">
         <cfargument  name="data" type="struct" required="true">
         <cfif arguments.data.action EQ "add">
-            <cfquery name="local.add" datasource="shopping" result="result">
+            <cfquery name="local.add" result="result">
                 INSERT INTO
                     product(
                         name,
@@ -267,7 +267,7 @@
             </cfquery>
             <cfset local.key = result.GENERATEDKEY>
         <cfelseif arguments.data.action EQ "edit">
-            <cfquery name="local.edit" datasource="shopping">
+            <cfquery name="local.edit">
                 UPDATE
                     product
                 SET
@@ -284,7 +284,7 @@
             <cfset local.key = arguments.data.id>
         </cfif>
         <cfif arrayLen(arguments.data.images) NEQ 0>
-            <cfquery name="local.image" datasource="shopping">
+            <cfquery name="local.image">
                 INSERT INTO
                     image(
                         productid,
@@ -315,7 +315,7 @@
     <cffunction  name="deleteImage" access="remote" returnFormat="JSON">
         <cfargument  name="image" type="integer" required="false">
         <cfargument  name="product" type="integer" required="false">
-        <cfquery name="local.edit" datasource="shopping">
+        <cfquery name="local.edit">
             UPDATE
                 image
             SET
@@ -331,7 +331,7 @@
 
     <cffunction  name="getCategory" access="remote" returnFormat="JSON">
         <cfargument  name="category" type="string" required="false">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 categoryid,
                 name,
@@ -361,7 +361,7 @@
     <cffunction  name="getSubcategory" access="remote" returnFormat="JSON">
         <cfargument  name="category" type="integer" required="false">
         <cfargument  name="subcategory" type="integer" required="false">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 subcategoryid,
                 name,
@@ -404,7 +404,7 @@
         <cfargument  name="sort" type="string" required="false">
         <cfargument  name="range" type="string" required="false">
         <cfargument  name="status" type="string" required="false">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 productid,
                 name,
@@ -483,7 +483,7 @@
         </cfquery>
         <cfset local.output = []>
         <cfoutput query="local.list">
-            <cfquery name="local.image" datasource="shopping">
+            <cfquery name="local.image">
                 SELECT
                     imageid,
                     image
@@ -521,7 +521,7 @@
     <cffunction  name="addCart" access="remote" returnFormat="JSON">
         <cfargument  name="product" type="integer" required="true">
         <cfargument  name="user" type="integer" required="true">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 cartid
             FROM
@@ -534,7 +534,7 @@
                 status = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
         </cfquery>
         <cfif local.list.recordCount NEQ 0>
-            <cfquery name="local.edit" datasource="shopping" result="result">
+            <cfquery name="local.edit" result="result">
                 UPDATE
                     cart
                 SET
@@ -543,7 +543,7 @@
                     cartid = <cfqueryparam value="#valueList(local.list.cartid)#" cfsqltype="cf_sql_integer" list='yes'>
             </cfquery>
         <cfelse>
-            <cfquery name="local.add" datasource="shopping">
+            <cfquery name="local.add">
                 INSERT INTO
                     cart(
                         productid,
@@ -564,7 +564,7 @@
     <cffunction  name="editCart" access="remote" returnFormat="JSON">
         <cfargument  name="cart" type="integer" required="true">
         <cfargument  name="quantity" type="string" required="true">
-        <cfquery name="local.edit" datasource="shopping" result="result">
+        <cfquery name="local.edit" result="result">
             UPDATE
                 cart
             SET
@@ -583,7 +583,7 @@
     <cffunction  name="deleteCart" access="remote" returnFormat="JSON">
         <cfargument  name="cart" type="integer" required="false">
         <cfargument  name="user" type="integer" required="false">
-        <cfquery name="local.edit" datasource="shopping" result="result">
+        <cfquery name="local.edit" result="result">
             UPDATE
                 cart
             SET
@@ -599,7 +599,7 @@
 
     <cffunction  name="getCart" access="remote" returnFormat="JSON">
         <cfargument  name="user" type="integer" required="true">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 cartid,
                 productid,
@@ -651,7 +651,7 @@
         </cfif>
         <cfif arrayLen(local.error) EQ 0>
             <cfif structKeyExists(arguments.data, 'id')>
-                <cfquery name="local.edit" datasource="shopping">
+                <cfquery name="local.edit">
                     UPDATE
                         shipping
                     SET
@@ -668,7 +668,7 @@
                         shippingid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">
                 </cfquery>
             <cfelse>
-                <cfquery name="local.add" datasource="shopping">
+                <cfquery name="local.add">
                     INSERT INTO
                         shipping(
                             name,
@@ -705,7 +705,7 @@
     <cffunction  name="getShipping" access="remote" returnFormat="JSON">
         <cfargument  name="user" type="integer" required="false">
         <cfargument  name="id" type="integer" required="false">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 shippingid,
                 name,
@@ -747,7 +747,7 @@
 
     <cffunction  name="deleteShipping" access="remote" returnFormat="JSON">
         <cfargument  name="id" type="integer" required="false">
-        <cfquery name="local.edit" datasource="shopping">
+        <cfquery name="local.edit">
             UPDATE
                 shipping
             SET
@@ -780,7 +780,7 @@
         </cfif>
         <cfif arrayLen(local.output.error) EQ 0>
             <cfset local.id = createUUID()>
-            <cfquery name="local.add" datasource="shopping">
+            <cfquery name="local.add">
                 INSERT INTO
                     ordercart(
                         orderdate,
@@ -820,7 +820,7 @@
             </cfif>
             <cfif arrayLen(local.items) GT 0>
                 <cfloop array="#local.items#" item="item">
-                    <cfquery name="local.add" datasource="shopping" result="result">
+                    <cfquery name="local.add" result="result">
                         INSERT INTO
                             orderitem(
                                 quantity,
@@ -849,70 +849,129 @@
         <cftry>
             <cfoutput>
                 <cfmail to="#session.user.email#"
-                        from="noreply@shoppingcart.com"
+                        from="noreply@shopkart.com"
                         type="html"
-                        subject="Your Order Placed Successfully">
+                        subject="Order Confirmation">
                     <html>
+                        <style>
+                            strong{
+                                font-family: Georgia;
+                            }
+                            .pop{
+                                margin-top: 30px;
+                                width: 100%;
+                                box-shadow: 0px 0px 10px blue;
+                                background-color: yellow;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                            .border{
+                                margin-top: 50px;
+                                margin-left: auto;
+                                margin-right: auto;
+                                width: 80%;
+                                border: 10px solid blue;
+                                padding: 5px;
+                            }
+                            .head{
+                                margin-top: 10px;
+                                width: 100%;
+                                text-align: center;
+                            }
+                            .text-right{
+                                text-align: right;
+                            }
+                            .table{
+                                width: 100%;
+                                border: 1px double black;
+                                margin-top: 20px;
+                                color: white;
+                                background-color: cyan;
+                            }
+                            .table th,.table td{
+                                border: 1px solid black;
+                                padding: 10px;
+                            }
+                            .box{
+                                margin: 20px;
+                                border: 1px solid black;
+                                padding: 10px;
+                            }
+                        </style>
                         <body>
-                            <cfdump  var="#order#">
-                            <div style="margin-top: 0; width: 100%; border-top: 10px solid blue; border-bottom: 10px solid blue;">
-                                <div style="margin: 20px;">
-                                    <p><strong>Order Number:</strong> #variables.orders[1].id#</p>
-                                    <p><strong>Invoice Date:</strong> #dateFormat(variables.orders[1].date, "mm/dd/yyyy")#</p>
+                            <div class="pop">
+                                <h2 style="color: green;">Your Order #local.order[1].id# Was Placed Successfully</h2>
+                                <h2 style="color: blue">Thank you for purchasing from <strong style="color: blue">ShopKart</strong></h2>
+                            </div>
+                            <div class="border">
+                                <div class="head">
+                                    <h2>
+                                        <strong style="color: blue;">ShopKart</strong>
+                                    </h2>
+                                    <h3>
+                                        <strong>INVOICE</strong>
+                                    </h3>
                                 </div>
 
-                                <div style="margin: 20px; border: 1px solid black; padding: 10px;">
+                                <div class="box">
+                                    <p><strong>Order Number:</strong> #local.order[1].id#</p>
+                                    <p><strong>Invoice Date:</strong> #dateFormat(local.order[1].date, "mm/dd/yyyy")#</p>
+                                </div>
+
+                                <div class="box">
                                     <p><strong>Bill To:</strong></p>
-                                    <p>Contact Name: #variables.orders[1].shipping.name#</p>
+                                    <p>Contact Name: #local.order[1].shipping.name#</p>
                                     <p>
                                         Shipping Address:
-                                            #variables.orders[1].shipping.house#,
-                                            #variables.orders[1].shipping.street#,
-                                            #variables.orders[1].shipping.city#,
-                                            #variables.orders[1].shipping.state#,
-                                            #variables.orders[1].shipping.country#
-                                            PIN - #variables.orders[1].shipping.pincode#
+                                            #local.order[1].shipping.house#,
+                                            #local.order[1].shipping.street#,
+                                            #local.order[1].shipping.city#,
+                                            #local.order[1].shipping.state#,
+                                            #local.order[1].shipping.country#
+                                            PIN - #local.order[1].shipping.pincode#
                                     </p>
-                                    <p>Phone: #variables.orders[1].shipping.phone#</p>
+                                    <p>Phone: #local.order[1].shipping.phone#</p>
                                 </div>
 
-                                <table style="width: 100%; border: 1px double black; margin-top: 20px; color: white; background-color: darkcyan;">
+                                <table class="table">
                                     <thead>
-                                        <tr style="border: 1px solid black; background-color: skyblue;">
-                                            <th style="border: 1px solid black; padding: 10px;">Description</th>
-                                            <th style="border: 1px solid black; padding: 10px;">Qty</th>
-                                            <th style="border: 1px solid black; padding: 10px;">Unit Price</th>
-                                            <th style="border: 1px solid black; padding: 10px;">Tax</th>
-                                            <th style="border: 1px solid black; padding: 10px;">Total</th>
+                                        <tr style="background-color: skyblue;">
+                                            <th>Item Name</th>
+                                            <th>Qty</th>
+                                            <th>Unit Price</th>
+                                            <th>Tax Rate</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <cfset variables.total = 0>
-                                        <cfset variables.tax = 0>
-                                        <cfloop array="#variables.orders[1].items#" index="item">
+                                        <cfset local.total = 0>
+                                        <cfset local.tax = 0>
+                                        <cfloop array="#local.order[1].items#" index="item">
                                             <tr>
-                                                <td style="border: 1px solid black; padding: 10px;">#item.name#</td>
-                                                <td style="border: 1px solid black; padding: 10px;">#item.quantity#</td>
-                                                <td style="border: 1px solid black; padding: 10px;">#chr(8377)##numberFormat(item.price+(item.price*item.tax/100),'__.00')#</td>
-                                                <td style="border: 1px solid black; padding: 10px;">#item.tax#%</td>
-                                                <td style="border: 1px solid black; padding: 10px;">#chr(8377)##numberFormat(item.quantity*(item.price+(item.price*item.tax/100)),'__.00')#</td>
+                                                <td>#item.name#</td>
+                                                <td>#item.quantity#</td>
+                                                <td>#chr(8377)##numberFormat(item.price,'__.00')#</td>
+                                                <td>#item.tax#%</td>
+                                                <td>#chr(8377)##numberFormat(item.quantity*(item.price+(item.price*item.tax/100)),'__.00')#</td>
                                             </tr>
-                                            <cfset variables.total += item.quantity*(item.price+(item.price*item.tax/100))>
-                                            <cfset variables.tax += item.quantity*(item.price*item.tax/100)>
+                                            <cfset local.total += item.quantity*(item.price+(item.price*item.tax/100))>
+                                            <cfset local.tax += item.quantity*(item.price*item.tax/100)>
                                         </cfloop>
                                     </tbody>
                                 </table>
 
-                                <p style="text-align: right;"><strong>Total Due:</strong> #chr(8377)##numberFormat(variables.total, '__.00')#</p>
+                                <p class="text-right"><strong>Total Due:</strong> #chr(8377)##numberFormat(local.total, '__.00')#</p>
                                 <hr>
-                                <p style="text-align: right;"><strong>Tax:</strong> #chr(8377)##numberFormat(variables.tax, '__.00')#</p>
+                                <p class="text-right"><strong>Tax:</strong> #chr(8377)##numberFormat(local.tax, '__.00')#</p>
                                 <hr>
-                                <p style="text-align: right;"><strong>Total Payed:</strong> #chr(8377)##numberFormat(variables.total, '__.00')#</p>
+                                <p class="text-right"><strong>Total Payed:</strong> #chr(8377)##numberFormat(local.total, '__.00')#</p>
                                 <hr>
 
                                 <div style="margin-top: 30px;">
                                     <p><strong>Payment Information:</strong> This invoice was paid by card ending in XX4321. The payment has been confirmed and processed.</p>
-                                    <p>Thank you for shopping with us!</p>
+                                    <p style="text-align: center;">Thank you for shopping with us!</p>
                                 </div>
                             </div>
                         </body>
@@ -927,7 +986,7 @@
 
     <cffunction  name="getOrderitem" access="remote" returnFormat="JSON">
         <cfargument  name="order" type="string" required="true">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 productid,
                 quantity,
@@ -954,7 +1013,7 @@
         <cfargument  name="user" type="integer" required="false">
         <cfargument  name="order" type="string" required="false">
         <cfargument  name="search" type="string" required="false">
-        <cfquery name="local.list" datasource="shopping">
+        <cfquery name="local.list">
             SELECT
                 o.orderid,
                 o.orderdate,
@@ -1014,7 +1073,7 @@
 	<cffunction name="deleteItem" access="public">
 		<cfargument name="data" type="struct" required="true">
         <cfif arguments.data.section EQ "category">
-            <cfquery name="local.deleteCategories" datasource="shopping">
+            <cfquery name="local.deleteCategories">
                 UPDATE category
                 SET
                     status = 0,
@@ -1023,7 +1082,7 @@
                 WHERE
                     categoryid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">
             </cfquery>
-            <cfquery name="local.deleteSubCategories" datasource="shopping">
+            <cfquery name="local.deleteSubCategories">
                 UPDATE subcategory
                 SET
                     status = 0,
@@ -1032,7 +1091,7 @@
                 WHERE
                     categoryid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">
             </cfquery>
-            <cfquery name="local.deleteProducts" datasource="shopping">
+            <cfquery name="local.deleteProducts">
                 UPDATE product
                 SET
                     status = 0,
@@ -1046,7 +1105,7 @@
                     )
             </cfquery>
         <cfelseif arguments.data.section EQ "subcategory">
-            <cfquery name="local.deleteSubCategories" datasource="shopping">
+            <cfquery name="local.deleteSubCategories">
                 UPDATE subcategory
                 SET
                     status = 0,
@@ -1055,7 +1114,7 @@
                 WHERE
                     subcategoryid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">
             </cfquery>
-            <cfquery name="local.deleteProducts" datasource="shopping">
+            <cfquery name="local.deleteProducts">
                 UPDATE product
                 SET
                     status = 0,
@@ -1065,7 +1124,7 @@
                     subcategoryid = <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">
             </cfquery>
         <cfelseif arguments.data.section EQ "product">
-            <cfquery name="local.deleteProducts" datasource="shopping">
+            <cfquery name="local.deleteProducts">
                 UPDATE product
                 SET
                     status = 0,

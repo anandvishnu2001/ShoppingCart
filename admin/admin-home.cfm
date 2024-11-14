@@ -43,7 +43,7 @@
 		<nav class="container-fluid p-1  navbar navbar-expand-lg navbar-light justify-content-between bg-success fw-bold fixed-top" data-bs-theme="dark">
             <a class="navbar-brand text-info" href="">
                 <img src="/images/shop.png" width="40" height="40" class="rounded-pill">
-                Shopping Cart
+                ShopKart
             </a>
             <ul class="navbar-nav nav-tabs nav-justified">
                 <li class="nav-item">

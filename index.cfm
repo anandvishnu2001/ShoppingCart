@@ -38,7 +38,7 @@
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
             <a class="flex-grow-1 navbar-brand ms-2" href="index.cfm">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
-                Shopping Cart
+                ShopKart
             </a>
             <form class="flex-grow-1 d-flex">
                 <input name="keyword" id="keyword" class="form-control me-2" type="text" placeholder="Search for products" required>
@@ -126,7 +126,7 @@
 				<h1 class="text-center text-danger">
                     Welcome to<br/>
 					<img src="/images/shop.png" width="50" height="50" class="img-fuid">
-					Shopping Cart
+					ShopKart
 				</h1>
 		</nav>
         <div class="container d-flex justify-content-center p-3 gap-5">

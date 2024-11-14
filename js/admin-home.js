@@ -75,28 +75,21 @@ $(document).ready(function () {
 
   $('#modal').on('show.bs.modal',function(event){
     let button = $(event.relatedTarget);
-    if(!$('.categoryText').hasClass("d-none"))
-      $('.categoryText').addClass("d-none");
-    if(!$('.categorySelect').hasClass("d-none"))
-      $('.categorySelect').addClass("d-none");
-    if(!$('.subcategoryText').hasClass("d-none"))
-      $('.subcategoryText').addClass("d-none");
-    if(!$('.subcategorySelect').hasClass("d-none"))
-      $('.subcategorySelect').addClass("d-none");
+    $('.categoryText').hide();
+    $('.categorySelect').hide();
+    $('.subcategoryText').hide();
+    $('.subcategorySelect').hide();
     if(!$('#product').hasClass("d-none"))
       $('#product').addClass("d-none");
-    if(!$('#imageModify').hasClass("d-none"))
-      $('#imageModify').addClass("d-none");
-    if(!$('#okbtn').hasClass("d-none"))
-      $('#okbtn').addClass("d-none");
+    $('#imageModify').hide();
+    $('#okbtn').hide();
     if(!$('.delete-mode').hasClass("d-none"))
       $('.delete-mode').addClass("d-none");
-    if(!$('#dltbtn').hasClass("d-none"))
-      $('#dltbtn').addClass("d-none");
+    $('#dltbtn').hide();
     if(button.data("bs-action") != "delete") {
-      $('#okbtn').removeClass("d-none");
+      $('#okbtn').show();
       if(button.data("bs-set") === "category" && button.data("bs-action") === "add") {
-        $('.categoryText').removeClass("d-none");
+        $('.categoryText').show();
         $('#categoryText').attr('required', 'true');
       }
       else {
@@ -110,12 +103,12 @@ $(document).ready(function () {
           success: function(data){
             let categoryObj = JSON.parse(data);
             if(button.data("bs-set") === "category") {
-              $('.categoryText').removeClass("d-none");
+              $('.categoryText').show();
               $('#categoryText').val(categoryObj[0].name).attr('required', 'true');
               $('#recordId').val(categoryObj[0].id);
             }
             else {
-              $('.categorySelect').removeClass("d-none");
+              $('.categorySelect').show();
               $('#categorySelect').attr('required', 'true').html('<option value=""></option>');
               $.each(categoryObj, function(_, category) {
                 $('#categorySelect').append(
@@ -123,7 +116,7 @@ $(document).ready(function () {
                 );
               });
               if(button.data("bs-set") === "subcategory" && button.data("bs-action") === "add") {
-                $('.subcategoryText').removeClass("d-none");
+                $('.subcategoryText').show();
                 $('#subcategoryText').attr('required', 'true');
               }
               else {
@@ -142,12 +135,12 @@ $(document).ready(function () {
                     success: function(data){
                       let subcategoryObj = JSON.parse(data);
                       if (button.data("bs-set") === "subcategory") {
-                        $('.subcategoryText').removeClass("d-none");
+                        $('.subcategoryText').show();
                         $('#subcategoryText').val(subcategoryObj[0].name).attr('required', 'true');
                         $('#recordId').val(subcategoryObj[0].id);
                       }
                       else {
-                        $('.subcategorySelect').removeClass("d-none");
+                        $('.subcategorySelect').show();
                         $('#subcategorySelect').attr('required', 'true').html('<option value=""></option>');
                         $.each(subcategoryObj, function(_, category) {
                           $('#subcategorySelect').append(
@@ -173,8 +166,8 @@ $(document).ready(function () {
                               $('#price').val(productObj[0].price);
                               $('#tax').val(productObj[0].tax);
                               $('#recordId').val(productObj[0].id);
-                              $('#product').removeClass("d-none").find('input','textarea','select').attr('required', 'true');
-                              $('#imageModify').removeClass("d-none");
+                              $('#product').find('input','textarea','select').attr('required', 'true');
+                              $('#imageModify').show();
                               $.each(productObj[0].images, function(_, value) {
                                 $('#imageList').append(
                                   $('<li>').attr({
@@ -210,7 +203,6 @@ $(document).ready(function () {
       }
       if(button.data("bs-action") == "edit") {
         $('#okbtn').html('Update');
-        $('#editImageView').removeClass("d-none");
       }
       else if (button.data("bs-action") == "add") {
         $('#okbtn').html('Save');
@@ -218,7 +210,7 @@ $(document).ready(function () {
     }
     else {
       $('.delete-mode').removeClass("d-none");
-      $('#dltbtn').removeClass("d-none");
+      $('#dltbtn').show();
       $('#recordId').val(button.data("bs-id"));
       $('#set').val(button.data("bs-set"));
     }
