@@ -122,19 +122,31 @@
                 </ul>
             </nav>
         </cfif>
-        <nav class="container-fluid navbar navbar-expand-lg justify-content-center bg-info h-50 mt-5">
-				<h1 class="text-center text-danger">
-                    Welcome to<br/>
-					<img src="/images/shop.png" width="50" height="50" class="img-fuid">
-					ShopKart
-				</h1>
+        <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel" data-bs-theme="dark">
+                <div class="carousel-inner h-100">
+                    <div class="carousel-item active">
+                        <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/images/banner-2.jpg" alt="Product image" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/images/banner-3.jpg" alt="Product image" class="d-block w-100">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
 		</nav>
-        <div class="container d-flex justify-content-center p-3 gap-5">
+        <div class="container d-flex justify-content-center p-1 gap-5">
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" data-bs-action="filter">Filter</button>
-            <div class="border border-2 border-secondary rounded d-flex justify-content-center align-items-center p-3 gap-1">
-                <h5 class="text-center text-success">
+            <div class="border border-2 border-secondary rounded d-flex justify-content-center align-items-center p-1 gap-1">
+                <p class="text-center text-success">
                     PRICE
-                </h5>
+                </p>
                 <cfoutput>
                     <cfset variables.url = cgi.HTTP_URL>
                     <cfset variables.url = REReplace(variables.url, "[&?]sort=[^&]*", "", "all")>
