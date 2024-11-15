@@ -41,16 +41,6 @@
             </cfoutput>
         </nav>
     </cfif>
-<cfelseif structKeyExists(form, 'passbtn')>
-    <cfset variables.message = control.userPasswordChange(user=session.user.user,email=form.email)>
-    <cfif len(variables.message) NEQ 0>
-        <nav class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <cfoutput>
-                #variables.message#
-            </cfoutput>
-        </nav>
-    </cfif>
 </cfif>
 <html lang="en">
 	<head>
