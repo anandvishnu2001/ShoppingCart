@@ -41,6 +41,16 @@
             </cfoutput>
         </nav>
     </cfif>
+<cfelseif structKeyExists(form, 'passbtn')>
+    <cfset variables.message = control.userPasswordChange(user=session.user.user,email=form.email)>
+    <cfif len(variables.message) NEQ 0>
+        <nav class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <cfoutput>
+                #variables.message#
+            </cfoutput>
+        </nav>
+    </cfif>
 </cfif>
 <html lang="en">
 	<head>
@@ -117,7 +127,7 @@
                                         <button id="emailbtn" name="emailbtn" type="submit" class="btn btn-outline-success fw-bold">Change</button>
                                     </fieldset>
                                 </form>
-                                <form class="container-fluid">
+                                <form class="container-fluid" action="" method="post">
                                     <fieldset class="d-flex flex-wrap border border-2 rounded gap-5 p-3">
                                         <legend>Password</legend>
                                         <div class="col-5 form-floating">
@@ -135,7 +145,7 @@
                                                 name="confirmPassword" placeholder="">
                                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                                         </div>
-                                        <button id="passwordbtn" name="passwordbtn" type="submit" class="btn btn-outline-success fw-bold">Change</button>
+                                        <button id="passbtn" name="passbtn" type="submit" class="btn btn-outline-success fw-bold">Change</button>
                                     </fieldset>
                                 </form>
                             </cfoutput>
