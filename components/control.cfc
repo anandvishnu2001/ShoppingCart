@@ -183,7 +183,7 @@
                     )
                 VALUES(
                     <cfqueryparam value="#arguments.data.category#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="1" cfsqltype="cf_sql_integer">,
+                    1,
                     <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
                     <cfqueryparam value="#arguments.data.admin#" cfsqltype="cf_sql_integer">
                 );
@@ -260,7 +260,7 @@
                     <cfqueryparam value="#arguments.data.price#" cfsqltype="cf_sql_decimal">,
                     <cfqueryparam value="#arguments.data.tax#" cfsqltype="cf_sql_integer">,
                     <cfqueryparam value="#arguments.data.subcategorySelect#" cfsqltype="cf_sql_integer">,
-                    <cfqueryparam value="1" cfsqltype="cf_sql_integer">,
+                    1,
                     <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
                     <cfqueryparam value="#arguments.data.admin#" cfsqltype="cf_sql_integer">
                 );
@@ -296,7 +296,7 @@
                         (
                             <cfqueryparam value="#arguments.data.id#" cfsqltype="cf_sql_integer">,
                             <cfqueryparam value="#pic#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                            1
                         )
                         <cfif arrayLast(arguments.data.images) NEQ pic>,</cfif>
                     </cfloop>
@@ -540,7 +540,7 @@
                 SET
                     quantity = quantity + 1
                 WHERE
-                    cartid = <cfqueryparam value="#valueList(local.list.cartid)#" cfsqltype="cf_sql_integer" list='yes'>
+                    cartid = <cfqueryparam value="#local.list.cartid#" cfsqltype="cf_sql_integer">
             </cfquery>
         <cfelse>
             <cfquery name="local.add">
@@ -554,8 +554,8 @@
                 VALUES(
                     <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">,
                     <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">,
-                    <cfqueryparam value="1" cfsqltype="cf_sql_integer">,
-                    <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                    1,
+                    1
                 )
             </cfquery>
         </cfif>
@@ -609,7 +609,7 @@
             WHERE
                 userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
             AND
-                status = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                status = 1
         </cfquery>
         <cfset local.output = []>
         <cfoutput query="local.list">
@@ -694,7 +694,7 @@
                         <cfqueryparam value="#arguments.data.pincode#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#arguments.data.user#" cfsqltype="cf_sql_integer">,
                         <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-                        <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                        1
                     )
                 </cfquery>
             </cfif>
@@ -722,7 +722,7 @@
                 <cfif structKeyExists(arguments, 'user')>
                         userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
                     AND
-                        status = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+                        status = 1
                 <cfelseif structKeyExists(arguments, 'id')>
                     shippingid = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
                 </cfif>
@@ -988,10 +988,7 @@
         <cfargument  name="order" type="string" required="true">
         <cfquery name="local.list">
             SELECT
-                productid,
-                quantity,
-                price,
-                tax
+                
             FROM
                 orderitem
             WHERE
@@ -1024,13 +1021,18 @@
                 s.city,
                 s.state,
                 s.country,
-                s.pincode
+                s.pincode,
+                i.productid,
+                i.quantity,
+                i.price,
+                i.tax
+                
             FROM
                 ordercart o
             INNER JOIN
-                shipping s
-            ON
-                o.shippingid = s.shippingid
+                shipping s ON o.shippingid = s.shippingid
+            INNER JOIN
+                orderitem i ON o.orderid = i.orderid
             WHERE
                 <cfif structKeyExists(arguments, 'user')>
                     o.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
@@ -1044,13 +1046,7 @@
             ;
         </cfquery>
         <cfset local.output = []>
-        <cfoutput query="local.list">
-            <cfset local.items = getOrderitem(order=local.list.orderid)>
-            <cfloop array="#local.items#" index="index" item="item">
-                <cfset local.product = getProduct(product=item.product, status="nostatus")>
-                <cfset local.items[index]['name'] = local.product[1].name>
-                <cfset local.items[index]['images'] = local.product[1].images>
-            </cfloop>
+        <cfloop query="local.list" group="orderid">
             <cfset arrayAppend(local.output, {
                 "id" : local.list.orderid,
                 'date' = local.list.orderdate,
@@ -1064,9 +1060,15 @@
                     'country' = local.list.country,
                     'pincode' = local.list.pincode
                 },
-                'items' = local.items
+                'items' = []
             })>
-        </cfoutput>
+            <cfloop>
+                <cfset arrayAppend(local.output[1].items, {
+                    'product' = local.list.productid,
+                    'price' = local.list.price
+                })>
+            </cfloop>
+        </cfloop>
         <cfreturn local.output>
     </cffunction>
 

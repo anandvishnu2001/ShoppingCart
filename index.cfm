@@ -41,7 +41,7 @@
                 ShopKart
             </a>
             <form class="flex-grow-1 d-flex">
-                <input name="keyword" id="keyword" class="form-control me-2" type="text" placeholder="Search for products" required>
+                <input name="keyword" id="keyword" class="form-control me-2" type="search" placeholder="Search for products" required>
                 <button name="search" id="search" class="btn btn-primary" type="submit" value="keyword">
                     <img src="/images/search.png" class="img-fluid" alt="Cart" width="30" height="30">
                 </button>

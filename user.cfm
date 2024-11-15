@@ -196,6 +196,7 @@
                         <cfelse>
                             <cfset variables.orders = control.getOrder(user=session.user.user)>
                         </cfif>
+                        <cfdump  var="#variables.orders#" abort>
                         <cfloop array="#variables.orders#" item="order">
                             <cfoutput>
                                 <div class="card">
@@ -306,58 +307,58 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="modal" tabindex="-1" role="dialog" data-bs-theme="dark">
-                <div class="modal-dialog">
-                    <div class="modal-content d-flex p-3">
-                        <div class="modal-header d-flex">
-                            <h2 id="modalhead" class="modal-title flex-grow-1 fw-bold text-primary text-center">Shipping Address Details</h2>
-                            <button type="button" class="btn-close border rounded" data-bs-dismiss="modal"></button>
-                        </div>
-                        <form id="addressForm" name="addressForm" class="modal-body d-flex flex-column gap-2 p-3" action="" method="post" enctype="multipart/form-data">
-                            <fieldset id="modify-mode" class="d-flex flex-column rounded border gap-2 p-3">
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="name" name="name" placeholder="">
-                                    <label for="name" class="form-label text-light">Name</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="phone" name="phone" placeholder="">
-                                    <label for="phone" class="form-label text-light">Phone</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="house" name="house" placeholder="">
-                                    <label for="house" class="form-label text-light">House/Flat</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="street" name="street" placeholder="">
-                                    <label for="street" class="form-label text-light">Street</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="city" name="city" placeholder="">
-                                    <label for="city" class="form-label text-light">City</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="state" name="state" placeholder="">
-                                    <label for="state" class="form-label text-light">State</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="country" name="country" placeholder="">
-                                    <label for="country" class="form-label text-light">Country</label>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control text-warning" type="text" id="pincode" name="pincode" placeholder="">
-                                    <label for="pincode" class="form-label text-light">Pincode</label>
-                                </div>
-                            </fieldset>
-                            <fieldset class="delete-mode d-flex flex-column rounded border gap-2 p-3">
-				                <legend class="text-center text-warning">Are you sure you want to remove this address?</legend>
-                            </fieldset>
-                            <input type="hidden" name="shippingId" id="shippingId">
-                        </form>
-                        <div class="modal-footer d-flex justify-content-between">
-                            <button name="okbtn" id="okbtn" type="submit" class="btn btn-outline-success fw-bold" form="addressForm"></button>
-                            <button name="dltbtn" id="dltbtn" type="submit" class="btn btn-outline-success fw-bold" form="addressForm">Yes</button>
-                            <button type="button" class="btn btn-outline-danger fw-bold" data-bs-dismiss="modal">Cancel</button>
-                        </div>
+        </div>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" data-bs-theme="dark">
+            <div class="modal-dialog">
+                <div class="modal-content d-flex p-3">
+                    <div class="modal-header d-flex">
+                        <h2 id="modalhead" class="modal-title flex-grow-1 fw-bold text-primary text-center">Shipping Address Details</h2>
+                        <button type="button" class="btn-close border rounded" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="addressForm" name="addressForm" class="modal-body d-flex flex-column gap-2 p-3" action="" method="post" enctype="multipart/form-data">
+                        <fieldset id="modify-mode" class="d-flex flex-column rounded border gap-2 p-3">
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="name" name="name" placeholder="">
+                                <label for="name" class="form-label text-light">Name</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="phone" name="phone" placeholder="">
+                                <label for="phone" class="form-label text-light">Phone</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="house" name="house" placeholder="">
+                                <label for="house" class="form-label text-light">House/Flat</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="street" name="street" placeholder="">
+                                <label for="street" class="form-label text-light">Street</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="city" name="city" placeholder="">
+                                <label for="city" class="form-label text-light">City</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="state" name="state" placeholder="">
+                                <label for="state" class="form-label text-light">State</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="country" name="country" placeholder="">
+                                <label for="country" class="form-label text-light">Country</label>
+                            </div>
+                            <div class="form-floating">
+                                <input class="form-control text-warning" type="text" id="pincode" name="pincode" placeholder="">
+                                <label for="pincode" class="form-label text-light">Pincode</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="delete-mode d-flex flex-column rounded border gap-2 p-3">
+                            <legend class="text-center text-warning">Are you sure you want to remove this address?</legend>
+                        </fieldset>
+                        <input type="hidden" name="shippingId" id="shippingId">
+                    </form>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button name="okbtn" id="okbtn" type="submit" class="btn btn-outline-success fw-bold" form="addressForm"></button>
+                        <button name="dltbtn" id="dltbtn" type="submit" class="btn btn-outline-success fw-bold" form="addressForm">Yes</button>
+                        <button type="button" class="btn btn-outline-danger fw-bold" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
