@@ -101,44 +101,6 @@
         <cfreturn local.message>
     </cffunction>
 
-    <cffunction  name="userPasswordChange" access="public">
-        <cfargument  name="user" type="string" required="true">
-        <cfargument  name="current" type="string" required="true">
-        <cfargument  name="new" type="string" required="true">
-        <cfargument  name="confirm" type="string" required="true">
-        <cfset local.message = "">
-        <cfif (structKeyExists(arguments, 'new')
-                AND )
-            AND (structKeyExists(arguments, 'confirm'))>
-        <cfif len(arguments.user) NEQ 0 
-            AND len(arguments.email) NEQ 0>
-                <cfquery name="local.checkLog">
-                    SELECT
-                        email
-                    FROM
-                        user
-                    WHERE
-                        email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
-                </cfquery>
-                <cfif local.checkLog.recordCount EQ 0>
-                    <cfquery name="local.checkLog">
-                        UPDATE
-                            user
-                        SET
-                            email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
-                        WHERE
-                            userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_varchar">
-                    </cfquery>
-                    <cfset session.user.email = arguments.email>
-                <cfelse>
-                    <cfset local.message = "*This email already has an account">
-                </cfif>
-            <cfelse>
-                <cfset local.message = "*Missing email">
-        </cfif>
-        <cfreturn local.message>
-    </cffunction>
-
     <cffunction  name="validate" access="public">
         <cfargument  name="data" type="struct" required="true">
         <cfset local.input = {
