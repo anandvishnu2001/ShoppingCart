@@ -1,7 +1,6 @@
 <cfset control = CreateObject("component", "components.control")>
 <cfif structKeyExists(session, 'user') 
     AND session.user.access>
-    <cfset variables.carter = control.getCart(session.user.user)>
 </cfif>
 <html lang="en">
 	<head>

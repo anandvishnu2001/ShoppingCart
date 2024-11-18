@@ -191,12 +191,13 @@
                         </form>
                     </div>
                     <div class="card-body overflow-y-scroll d-grid gap-5 m-1">
+                        <cfset argumentCollection = {
+                            'user' = session.user.user
+                        }>
                         <cfif structKeyExists(url, 'keyword')>
-                            <cfset variables.orders = control.getOrder(user=session.user.user,search=url.keyword)>
-                        <cfelse>
-                            <cfset variables.orders = control.getOrder(user=session.user.user)>
+                            <cfset argumentCollection.search = url.keyword>
                         </cfif>
-                        <cfdump  var="#variables.orders#" abort>
+                        <cfset variables.orders = control.getOrder(argumentCollection=argumentCollection)>
                         <cfloop array="#variables.orders#" item="order">
                             <cfoutput>
                                 <div class="card">

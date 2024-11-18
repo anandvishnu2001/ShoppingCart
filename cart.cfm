@@ -10,7 +10,7 @@
     <cfset session.user = {
         "access" = false
     }>
-    <cfset variables.carter = []>
+    <cfset variables.carter = {}>
 </cfif>
 <html lang="en">
 	<head>
@@ -27,10 +27,10 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="cart.cfm">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
-                        <cfif structKeyExists(variables, 'carter')
-                            AND arrayLen(variables.carter) GT 0>
+                        <cfif structKeyExists(variables.carter, 'items')
+                            AND arrayLen(variables.carter.items) GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#arrayLen(variables.carter)#</span>
+                                <span class="badge bg-danger rounded-pill">#arrayLen(variables.carter.items)#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -56,42 +56,42 @@
                 <ul class="card-body list-group d-flex flex-column p-5">
                     <cfset variables.cartTotal = 0>
                     <cfif session.user.access
-                            AND arrayLen(variables.carter) NEQ 0>
-                            <cfloop array="#variables.carter#" item="item">
-                                <cfoutput>
-                                    <li class="list-group-item d-flex flex-column gap-3 p-5">
-                                        <cfset variables.cartProduct = control.getProduct(product=item.product)>
-                                        <div class="d-flex flex-row flex-wrap justify-content-evenly">
-                                            <div id="productpic#variables.cartProduct[1].id#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
-                                                <div class="carousel-inner">
-                                                    <cfloop array="#variables.cartProduct[1].images#" index="index" item="image">
-                                                        <div class="carousel-item <cfif index EQ 1> active</cfif>">
-                                                            <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
-                                                        </div>
-                                                    </cfloop>
-                                                </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#variables.cartProduct[1].id#" data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon"></span>
-                                                </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#variables.cartProduct[1].id#" data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon"></span>
-                                                </button>
+                        AND structKeyExists(variables.carter, 'items')
+                        AND arrayLen(variables.carter.items) NEQ 0>
+                        <cfloop array="#variables.carter.items#" item="item">
+                            <cfoutput>
+                                <li class="list-group-item d-flex flex-column gap-3 p-5">
+                                    <div class="d-flex flex-row flex-wrap justify-content-evenly">
+                                        <div id="productpic#item.product#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                            <div class="carousel-inner">
+                                                <cfloop array="#item.images#" index="index" item="image">
+                                                    <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                        <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
+                                                    </div>
+                                                </cfloop>
                                             </div>
-                                            <div class="col-5 d-flex flex-column justify-content-evenly fw-bold">
-                                                <p class="h4 card-title text-info">#variables.cartProduct[1].name#</p>
-                                                <cfset variables.cartTotal += (variables.cartProduct[1].price+(variables.cartProduct[1].price*variables.cartProduct[1].tax/100))*item.quantity>
-                                                <p class="card-text text-danger">#(variables.cartProduct[1].price+(variables.cartProduct[1].price*variables.cartProduct[1].tax/100))*item.quantity#</p>
-                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon"></span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon"></span>
+                                            </button>
                                         </div>
-                                        <div class="d-flex justify-content-evenly">
-                                            <button onclick="changeQuantity(#item.id#,'decrement')" class="btn btn-secondary rounded-pill <cfif item.quantity LTE 1>disabled</cfif>">-</button>
-                                            <p class="card-text text-muted">#item.quantity#</p>
-                                            <button onclick="changeQuantity(#item.id#,'increment')" class="btn btn-secondary rounded-pill">+</button>
-                                            <button onclick="removeCartProduct(#item.id#)" class="btn btn-danger">Remove item</button>
+                                        <div class="col-5 d-flex flex-column justify-content-evenly fw-bold">
+                                            <p class="h4 card-title text-info">#item.name#</p>
+                                            <cfset variables.cartTotal += (item.price+(item.price*item.tax/100))*item.quantity>
+                                            <p class="card-text text-danger">#(item.price+(item.price*item.tax/100))*item.quantity#</p>
                                         </div>
-                                    </li>
-                                </cfoutput>
-                            </cfloop>
+                                    </div>
+                                    <div class="d-flex justify-content-evenly">
+                                        <button class="cart btn btn-secondary rounded-pill" data-id="#item.product#" data-action="decrease">-</button>
+                                        <p class="card-text text-muted">#item.quantity#</p>
+                                        <button class="cart btn btn-secondary rounded-pill" data-id="#item.product#" data-action="increase">+</button>
+                                        <button class="cart btn btn-danger" data-id="#item.product#" data-action="delete">Remove item</button>
+                                    </div>
+                                </li>
+                            </cfoutput>
+                        </cfloop>
                     <cfelseif session.user.access>
                         <div class="col-md-6 col-12 d-grid mx-auto">
                             <h1 class="bg-warning shadow text-center text-dark">Cart is Empty!!</h1>
@@ -114,12 +114,12 @@
                     </cfif>
                 </ul>
             </div>
-            <cfif arrayLen(variables.carter) NEQ 0>
+            <cfif arrayLen(variables.carter.items) NEQ 0>
                 <div class="card bg-light fw-bold col-4 p-3 gap-5 p-5">
                     <cfoutput>
                         <p class="card-text bg-info text-center text-danger">Total Price :<br>#variables.cartTotal#</p>
                         <a class="btn btn-success" href="payment.cfm">Check out</a>
-                        <button onclick="removeCart(#session.user.user#)" class="btn btn-danger">Empty cart</button>
+                        <button class="cart btn btn-danger">Empty cart</button>
                     </cfoutput>
                 </div>
             </cfif>

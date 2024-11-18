@@ -3,14 +3,18 @@ function adjustNavbarPositions() {
     $('#category-nav').css('top', mainNavHeight + 'px');
 }
 
-function changeQuantity(id,change) {
+function changeProduct(id,change) {
+    let data = {};
+    if (id) {
+        data.product = id;
+    }
+    if (change) {
+        data.change = change;
+    }
     $.ajax({
         url: '/components/control.cfc?method=editCart',
         type: 'GET',
-        data: {
-            "cart": id,
-            "quantity": change
-        },
+        data: data,
         success: function(data){
             window.location.href = window.location.href;
         }
@@ -19,11 +23,21 @@ function changeQuantity(id,change) {
 
 function removeCartProduct(id) {
     $.ajax({
-        url: '/components/control.cfc?method=deleteCart',
+        url: '/components/control.cfc?method=editCart',
         type: 'GET',
         data: {
-            "cart": id
+            "product": id
         },
+        success: function(data){
+            window.location.href = window.location.href;
+        }
+    });
+}
+
+function removeCart() {
+    $.ajax({
+        url: '/components/control.cfc?method=editCart',
+        type: 'GET',
         success: function(data){
             window.location.href = window.location.href;
         }
@@ -35,23 +49,14 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 });
 
-function removeCart(id) {
-    $.ajax({
-        url: '/components/control.cfc?method=deleteCart',
-        type: 'GET',
-        data: {
-            "user": id
-        },
-        success: function(data){
-            window.location.href = window.location.href;
-        }
-    });
-}
-
 $(document).ready(adjustNavbarPositions);
 $(window).resize(adjustNavbarPositions);
 
 $(document).ready(function () {
+    $('.cart').click(function () {
+        changeProduct($(this).data('id') || null, $(this).data('action') || null);
+    });
+
     $("#address-card").hide();
 
     $("#order-card").hide();

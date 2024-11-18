@@ -562,37 +562,43 @@
     </cffunction>
 
     <cffunction  name="editCart" access="remote" returnFormat="JSON">
-        <cfargument  name="cart" type="integer" required="true">
-        <cfargument  name="quantity" type="string" required="true">
-        <cfquery name="local.edit" result="result">
+        <cfargument  name="product" type="integer" required="false">
+        <cfargument  name="change" type="string" required="false">
+        <cfif structKeyExists(arguments, 'change')>
+            <cfquery name="local.check">
+                SELECT
+                    quantity
+                FROM
+                    cart
+                WHERE
+                    userid = <cfqueryparam value="#session.user.user#" cfsqltype="cf_sql_integer">
+                AND
+                    productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
+            </cfquery>
+        </cfif>
+        <cfquery name="local.edit">
             UPDATE
                 cart
             SET
-                quantity = quantity 
-                    <cfif arguments.quantity EQ 'increment'>
-                        +
-                    <cfelseif arguments.quantity EQ 'decrement'>
-                        -
-                    </cfif>
-                1
+                <cfif structKeyExists(arguments, 'change') 
+                    AND (local.check.quantity GT 1
+                        OR arguments.change EQ 'increase'
+                        OR arguments.change NEQ 'delete')>
+                    quantity = quantity 
+                        <cfif arguments.change EQ 'increase'>
+                            +
+                        <cfelseif arguments.change EQ 'decrease'>
+                            -
+                        </cfif>
+                    1
+                <cfelse>
+                    status = 0
+                </cfif>
             WHERE
-                cartid = <cfqueryparam value="#arguments.cart#" cfsqltype="cf_sql_integer">
-        </cfquery>
-    </cffunction>
-
-    <cffunction  name="deleteCart" access="remote" returnFormat="JSON">
-        <cfargument  name="cart" type="integer" required="false">
-        <cfargument  name="user" type="integer" required="false">
-        <cfquery name="local.edit" result="result">
-            UPDATE
-                cart
-            SET
-                status = 0
-            WHERE
-                <cfif structKeyExists(arguments, 'cart')>
-                    cartid = <cfqueryparam value="#arguments.cart#" cfsqltype="cf_sql_integer">
-                <cfelseif structKeyExists(arguments, 'user')>
-                    userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
+                userid = <cfqueryparam value="#session.user.user#" cfsqltype="cf_sql_integer">
+                <cfif structKeyExists(arguments, 'product')>
+                    AND
+                        productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
                 </cfif>
         </cfquery>
     </cffunction>
@@ -601,24 +607,47 @@
         <cfargument  name="user" type="integer" required="true">
         <cfquery name="local.list">
             SELECT
-                cartid,
-                productid,
-                quantity
+                c.cartid,
+                c.productid,
+                c.quantity,
+                p.name,
+                p.price,
+                p.tax,
+                m.imageid,
+                m.image
             FROM
-                cart
+                cart c
+            INNER JOIN
+                product p ON p.productid = c.productid
+            INNER JOIN
+                image m ON m.productid = p.productid
             WHERE
-                userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
+                c.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
             AND
-                status = 1
+                c.status = 1
         </cfquery>
-        <cfset local.output = []>
-        <cfoutput query="local.list">
-            <cfset arrayAppend(local.output, {
+        <cfset local.output = {
+            'user' = arguments.user,
+            'items' = []
+        }>
+        <cfloop query="local.list" group="productid">
+            <cfset local.images = []>
+            <cfloop>
+                <cfset arrayAppend(local.images, {
+                    'id' = local.list.imageid,
+                    'image' = local.list.image
+                })>
+            </cfloop>
+            <cfset arrayAppend(local.output.items, {
                 "id" : local.list.cartid,
                 "product" : local.list.productid,
-                "quantity" : local.list.quantity
+                "quantity" : local.list.quantity,
+                "price" : local.list.price,
+                "tax" : local.list.tax,
+                "name" : local.list.name,
+                "images" : local.images
             })>
-        </cfoutput>
+        </cfloop>
         <cfreturn local.output>
     </cffunction>
 
@@ -984,30 +1013,8 @@
         </cftry>
     </cffunction>
 
-    <cffunction  name="getOrderitem" access="remote" returnFormat="JSON">
-        <cfargument  name="order" type="string" required="true">
-        <cfquery name="local.list">
-            SELECT
-                
-            FROM
-                orderitem
-            WHERE
-                orderid = <cfqueryparam value="#arguments.order#" cfsqltype="cf_sql_varchar">;
-        </cfquery>
-        <cfset local.output = []>
-        <cfoutput query="local.list">
-            <cfset arrayAppend(local.output, {
-                "product" : local.list.productid,
-                'quantity' = local.list.quantity,
-                'price' = local.list.price,
-                'tax' = local.list.tax
-            })>
-        </cfoutput>
-        <cfreturn local.output>
-    </cffunction>
-
     <cffunction  name="getOrder" access="remote" returnFormat="JSON">
-        <cfargument  name="user" type="integer" required="false">
+        <cfargument  name="user" type="integer" required="true">
         <cfargument  name="order" type="string" required="false">
         <cfargument  name="search" type="string" required="false">
         <cfquery name="local.list">
@@ -1026,6 +1033,9 @@
                 i.quantity,
                 i.price,
                 i.tax
+                p.name,
+                m.imageid,
+                m.image
                 
             FROM
                 ordercart o
@@ -1033,20 +1043,41 @@
                 shipping s ON o.shippingid = s.shippingid
             INNER JOIN
                 orderitem i ON o.orderid = i.orderid
+            INNER JOIN
+                product p ON i.productid = p.productid
+            INNER JOIN
+                image m ON p.productid = m.productid
             WHERE
-                <cfif structKeyExists(arguments, 'user')>
-                    o.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
-                    <cfif structKeyExists(arguments, 'search')>
-                        AND
-                            o.orderid = <cfqueryparam value="#arguments.search#" cfsqltype="cf_sql_varchar">
-                    </cfif>
+                o.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
+                <cfif structKeyExists(arguments, 'search')>
+                    AND
+                        o.orderid = <cfqueryparam value="#arguments.search#" cfsqltype="cf_sql_varchar">
                 <cfelseif structKeyExists(arguments, 'order')>
-                    o.orderid = <cfqueryparam value="#arguments.order#" cfsqltype="cf_sql_varchar">
+                    AND
+                        o.orderid = <cfqueryparam value="#arguments.order#" cfsqltype="cf_sql_varchar">
                 </cfif>
             ;
         </cfquery>
         <cfset local.output = []>
         <cfloop query="local.list" group="orderid">
+            <cfset local.items = []>
+            <cfloop group="productid">
+                <cfset local.images = []>
+                <cfloop>
+                    <cfset arrayAppend(local.images, {
+                        'id' = local.list.imageid,
+                        'image' = local.list.image
+                    })>
+                </cfloop>
+                <cfset arrayAppend(local.items, {
+                    'product' = local.list.productid,
+                    'price' = local.list.price,
+                    'quantity' = local.list.quantity,
+                    'tax' = local.list.tax,
+                    'name' = local.list.name,
+                    'images' = local.images
+                })>
+            </cfloop>
             <cfset arrayAppend(local.output, {
                 "id" : local.list.orderid,
                 'date' = local.list.orderdate,
@@ -1060,14 +1091,8 @@
                     'country' = local.list.country,
                     'pincode' = local.list.pincode
                 },
-                'items' = []
+                'items' = local.items
             })>
-            <cfloop>
-                <cfset arrayAppend(local.output[1].items, {
-                    'product' = local.list.productid,
-                    'price' = local.list.price
-                })>
-            </cfloop>
         </cfloop>
         <cfreturn local.output>
     </cffunction>

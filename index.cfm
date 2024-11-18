@@ -5,7 +5,6 @@
             "access" = false
         }>
 <cfelse>
-    <cfset variables.carter = control.getCart(session.user.user)>
 </cfif>
 <cfset argumentCollection = {}>
 <cfif structKeyExists(url, 'sort')>
