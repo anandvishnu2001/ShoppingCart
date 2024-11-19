@@ -27,10 +27,10 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="cart.cfm">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
-                        <cfif structKeyExists(variables.carter, 'items')
-                            AND arrayLen(variables.carter.items) GT 0>
+                        <cfif structKeyExists(session.user, 'user')
+                            AND control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#arrayLen(variables.carter.items)#</span>
+                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>

@@ -7,7 +7,6 @@
 <cfelse>
     <cflocation url="login.cfm" addToken="no">
 </cfif>
-<cfset control.paymentMail(order=url.order)>
 <html lang="en">
 	<head>
 		<link href="/css/admin.css" rel="stylesheet">

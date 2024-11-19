@@ -59,10 +59,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="cart.cfm">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
-                        <cfif structKeyExists(variables, 'carter')
-                            AND arrayLen(variables.carter) GT 0>
+                        <cfif structKeyExists(session.user, 'user')
+                            AND control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#arrayLen(variables.carter)#</span>
+                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -99,12 +99,12 @@
             </cfoutput>
             <div class="h-100 d-flex flex-column z-0 fw-bold col-9 p-5">
                 <cfoutput>
-                    <div class="h-75 position-absolute z-0 d-flex flex-column align-items-center fw-bold">
+                    <div id="user-info" class="h-75 position-absolute z-0 d-flex flex-column align-items-center fw-bold">
                         <h1 class="container-fluid text-center">
                             <span class="text-muted">Name of User :</span>
                             <span class="text-primary">#session.user.name#</span>
                         </h1>
-                        <div class="container-fluid h-50 d-flex flex-column fw-bold">
+                        <div class="container-fluid d-flex flex-column fw-bold">
                             <cfoutput>
                                 <form class="container-fluid" action="" method="post">
                                     <fieldset class="d-flex flex-wrap border border-2 rounded gap-5 p-3">
@@ -191,9 +191,7 @@
                         </form>
                     </div>
                     <div class="card-body overflow-y-scroll d-grid gap-5 m-1">
-                        <cfset argumentCollection = {
-                            'user' = session.user.user
-                        }>
+                        <cfset argumentCollection = {}>
                         <cfif structKeyExists(url, 'keyword')>
                             <cfset argumentCollection.search = url.keyword>
                         </cfif>
@@ -206,7 +204,8 @@
                                             <span class="text-white">Order No :</span>
                                             <span class="text-muted">#order.id#</span>
                                         </h5>
-                                        <a class="btn btn-danger" href="order-invoice.cfm?order=#order.id#">pdf
+                                        <a class="btn btn-info" href="order-invoice.cfm?order=#order.id#">
+                                            <img src="/images/pdf.png" class="img-fluid" alt="Cart" width="30" height="30">
                                         </a>
                                     </div>
                                     <cfset variables.total = 0>

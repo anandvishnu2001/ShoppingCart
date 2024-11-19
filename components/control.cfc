@@ -561,6 +561,20 @@
         </cfif>
     </cffunction>
 
+    <cffunction  name="countCart" access="remote" returnFormat="JSON">
+        <cfquery name="local.count">
+            SELECT
+                COUNT(cartid) AS badge
+            FROM
+                cart
+            WHERE
+                userid = <cfqueryparam value="#session.user.user#" cfsqltype="cf_sql_integer">
+            AND
+                status = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn local.count.badge>
+    </cffunction>
+
     <cffunction  name="editCart" access="remote" returnFormat="JSON">
         <cfargument  name="product" type="integer" required="false">
         <cfargument  name="change" type="string" required="false">
@@ -625,6 +639,10 @@
                 c.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
             AND
                 c.status = 1
+            AND
+                p.status = 1
+            AND
+                m.status = 1;
         </cfquery>
         <cfset local.output = {
             'user' = arguments.user,
@@ -828,16 +846,15 @@
             <cfset local.items = []>
             <cfif arguments.data.idType EQ 'cart'>
                 <cfset local.cart = getCart(arguments.data.user)>
-                <cfloop array="#local.cart#" item="item">
-                    <cfset local.product = getProduct(product=item.product)>
+                <cfloop array="#local.cart.items#" item="item">
                     <cfset arrayAppend(local.items, {
                         'product' = item.product,
                         'quantity' = item.quantity,
-                        'tax' = local.product[1].tax,
-                        'price' = local.product[1].price
+                        'tax' = item.tax,
+                        'price' = item.price
                     })>
                 </cfloop>
-                <cfset deleteCart(user=arguments.data.user)>
+                <cfset editCart()>
             <cfelseif arguments.data.idType EQ 'product'>
                 <cfset local.product = getProduct(product=arguments.data.id)>
                 <cfset arrayAppend(local.items, {
@@ -848,26 +865,29 @@
                     })>
             </cfif>
             <cfif arrayLen(local.items) GT 0>
-                <cfloop array="#local.items#" item="item">
-                    <cfquery name="local.add" result="result">
-                        INSERT INTO
-                            orderitem(
-                                quantity,
-                                price,
-                                tax,
-                                orderid,
-                                productid
-                            )
-                        VALUES(
-                            <cfqueryparam value="#item.quantity#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#item.price#" cfsqltype="cf_sql_decimal">,
-                            <cfqueryparam value="#item.tax#" cfsqltype="cf_sql_integer">,
-                            <cfqueryparam value="#local.id#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#item.product#" cfsqltype="cf_sql_integer">
+                <cfquery name="local.add" result="result">
+                    INSERT INTO
+                        orderitem(
+                            quantity,
+                            price,
+                            tax,
+                            orderid,
+                            productid
                         )
-                    </cfquery>
-                </cfloop>
+                    VALUES
+                        <cfloop array="#local.items#" index="index" item="item">
+                            (
+                                <cfqueryparam value="#item.quantity#" cfsqltype="cf_sql_varchar">,
+                                <cfqueryparam value="#item.price#" cfsqltype="cf_sql_decimal">,
+                                <cfqueryparam value="#item.tax#" cfsqltype="cf_sql_integer">,
+                                <cfqueryparam value="#local.id#" cfsqltype="cf_sql_varchar">,
+                                <cfqueryparam value="#item.product#" cfsqltype="cf_sql_integer">
+                            )
+                            <cfif arrayLen(local.items) NEQ index>,</cfif>
+                        </cfloop>
+                </cfquery>
             </cfif>
+            <cfset paymentMail(order=local.id)>
         </cfif>
         <cfreturn local.output>
     </cffunction>
@@ -1014,7 +1034,6 @@
     </cffunction>
 
     <cffunction  name="getOrder" access="remote" returnFormat="JSON">
-        <cfargument  name="user" type="integer" required="true">
         <cfargument  name="order" type="string" required="false">
         <cfargument  name="search" type="string" required="false">
         <cfquery name="local.list">
@@ -1032,7 +1051,7 @@
                 i.productid,
                 i.quantity,
                 i.price,
-                i.tax
+                i.tax,
                 p.name,
                 m.imageid,
                 m.image
@@ -1048,7 +1067,7 @@
             INNER JOIN
                 image m ON p.productid = m.productid
             WHERE
-                o.userid = <cfqueryparam value="#arguments.user#" cfsqltype="cf_sql_integer">
+                o.userid = <cfqueryparam value="#session.user.user#" cfsqltype="cf_sql_integer">
                 <cfif structKeyExists(arguments, 'search')>
                     AND
                         o.orderid = <cfqueryparam value="#arguments.search#" cfsqltype="cf_sql_varchar">
@@ -1056,6 +1075,8 @@
                     AND
                         o.orderid = <cfqueryparam value="#arguments.order#" cfsqltype="cf_sql_varchar">
                 </cfif>
+            AND
+                m.status = 1
             ;
         </cfquery>
         <cfset local.output = []>

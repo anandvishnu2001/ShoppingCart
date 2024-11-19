@@ -64,10 +64,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="cart.cfm">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
-                        <cfif structKeyExists(variables, 'carter')
-                            AND arrayLen(variables.carter) GT 0>
+                        <cfif structKeyExists(session.user, 'user')
+                            AND control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#arrayLen(variables.carter)#</span>
+                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -121,10 +121,19 @@
                 </ul>
             </nav>
         </cfif>
-        <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel">
-                <div class="carousel-inner h-100">
+        <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel" data-bs-theme="dark">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#banner" data-bs-slide-to="0" class="active p-3" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#banner" data-bs-slide-to="1" class="p-3" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#banner" data-bs-slide-to="2" class="p-3" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
+                        <div class="carousel-caption d-none d-md-block text-warning font-monospace">
+                            <h3>SHOPKART</h3>
+                            <h5>Welcome to the shopping paradise.</h5>
+                        </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/images/banner-2.jpg" alt="Product image" class="d-block w-100">
@@ -134,10 +143,10 @@
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
+                    <span class="carousel-control-prev-icon p-5"></span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
+                    <span class="carousel-control-next-icon p-5"></span>
                 </button>
 		</nav>
         <div class="container d-flex justify-content-center p-1 gap-5">

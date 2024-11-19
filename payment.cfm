@@ -46,7 +46,7 @@
     <cfelse>
         <div class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            Payment Filed!!! Due to:
+            Payment Failed!!! Due to:
             <cfoutput>
                 #arrayToList(variables.output.error)#
             </cfoutput>
@@ -137,40 +137,39 @@
                                 </div>
                             </div>
                         </cfoutput>
-                    <cfelseif arrayLen(variables.carter) GT 0>
+                    <cfelseif structKeyExists(variables, 'carter') AND arrayLen(variables.carter.items) GT 0>
                         <ul class="card-body overflow-y-scroll list-group d-flex flex-column p-1">
-                            <cfloop array="#variables.carter#" item="item">
+                            <cfloop array="#variables.carter.items#" item="item">
                                     <li class="list-group-item d-flex flex-row flex-wrap justify-content-evenly gap-1">
-                                        <cfset variables.orderItem = control.getProduct(product=item.product)>
                                         <cfoutput>
-                                                <div id="productpic#variables.orderItem[1].id#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                                <div id="productpic#item.product#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
                                                     <div class="carousel-inner">
-                                                        <cfloop array="#variables.orderItem[1].images#" index="index" item="image">
+                                                        <cfloop array="#item.images#" index="index" item="image">
                                                             <div class="carousel-item <cfif index EQ 1> active</cfif>">
                                                                 <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
                                                             </div>
                                                         </cfloop>
                                                     </div>
-                                                    <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#variables.orderItem[1].id#" data-bs-slide="prev">
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="prev">
                                                         <span class="carousel-control-prev-icon"></span>
                                                     </button>
-                                                    <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#variables.orderItem[1].id#" data-bs-slide="next">
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#chr(35)#productpic#item.product#" data-bs-slide="next">
                                                         <span class="carousel-control-next-icon"></span>
                                                     </button>
                                                 </div>
                                                 <div class="col-5 d-flex flex-column justify-content-evenly fw-bold">
-                                                    <p class="card-title text-primary">#variables.orderItem[1].name#</p>
+                                                    <p class="card-title text-primary">#item.name#</p>
                                                     <div class="d-grid fw-bold">
-                                                        <p class="card-text text-danger">Unit Price: #numberFormat(variables.orderItem[1].price,'.__')#</p>
-                                                        <p class="card-text text-info">Tax Rate: #orderItem[1].tax#%</p>
+                                                        <p class="card-text text-danger">Unit Price: #numberFormat(item.price,'.__')#</p>
+                                                        <p class="card-text text-info">Tax Rate: #item.tax#%</p>
                                                         <p class="card-text text-muted">Quantity: #item.quantity#</p>
                                                     </div>
-                                                    <cfset variables.orderTotal += (variables.orderItem[1].price+(variables.orderItem[1].price*variables.orderItem[1].tax/100))*item.quantity>
-                                                    <cfset variables.orderTax += (variables.orderItem[1].price*variables.orderItem[1].tax/100)*item.quantity>
+                                                    <cfset variables.orderTotal += (item.price+(item.price*item.tax/100))*item.quantity>
+                                                    <cfset variables.orderTax += (item.price*item.tax/100)*item.quantity>
                                                 </div>
                                                 <div class="col-5 fw-bold">
-                                                    <p class="card-text text-danger">Total Price: #numberFormat((variables.orderItem[1].price+(variables.orderItem[1].price*variables.orderItem[1].tax/100))*item.quantity,'.__')#</p>
-                                                    <p class="card-text text-info">Tax: #numberFormat((variables.orderItem[1].price*variables.orderItem[1].tax/100)*item.quantity,'.__')#</p>
+                                                    <p class="card-text text-danger">Total Price: #numberFormat((item.price+(item.price*item.tax/100))*item.quantity,'.__')#</p>
+                                                    <p class="card-text text-info">Tax: #numberFormat((item.price*item.tax/100)*item.quantity,'.__')#</p>
                                                 </div>
                                         </cfoutput>
                                     </li>
@@ -191,8 +190,8 @@
                     <cfoutput>
                         <cfif structKeyExists(url, 'pro')>
                             data-bs-id="#url.pro#" data-bs-idtype="product"
-                        <cfelseif arrayLen(variables.carter) GT 0>
-                            data-bs-id="#variables.carter[1].id#" data-bs-idtype="cart"
+                        <cfelseif arrayLen(variables.carter.items) GT 0>
+                            data-bs-id="#variables.carter.items[1].id#" data-bs-idtype="cart"
                         </cfif>
                     </cfoutput>>
                     Payment
