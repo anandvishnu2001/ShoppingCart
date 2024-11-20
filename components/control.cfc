@@ -448,8 +448,8 @@
                         name LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
                 </cfif>
                 <cfif structKeyExists(arguments, 'range')>
-                    <cfset local.rangeLen = listLen(arguments.range)>
-                    <cfif local.rangeLen GT 1>
+                    <cfset local.rangeLen = listLen(arguments.range,',',true)>
+                    <cfif local.rangeLen EQ 2>
                         <cfset local.rangeArray = listToArray(arguments.range)>
                         <cfif local.rangeArray[2] EQ 'max'>
                             AND

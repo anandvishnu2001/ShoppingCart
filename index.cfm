@@ -24,9 +24,16 @@
 </cfif>
 <cfset products = control.getProduct(argumentCollection=argumentCollection)>
 <cfif structKeyExists(form, 'filterbtn')
-    AND structKeyExists(form, 'check')
-    AND len(form.check) GT 0>
-        <cflocation  url="index.cfm?range=#form.check#" addToken="no">
+    AND structKeyExists(form, 'minPrice')
+    AND structKeyExists(form, 'maxPrice')>
+    <cfset variables.range = ''>
+    <cfif structKeyExists(form, 'minPrice')>
+            <cfset variables.range = listAppend(variables.range, form.minPrice)>
+    </cfif>
+    <cfif structKeyExists(form, 'maxPrice')>
+            <cfset variables.range = listAppend(variables.range, form.maxPrice)>
+    </cfif>
+    <cflocation  url="index.cfm?range=#variables.range#" addToken="no">
 </cfif>
 <html lang="en">
 	<head>
@@ -122,47 +129,55 @@
             </nav>
         </cfif>
         <nav id="banner"  class="container-fluid carousel slide navbar navbar-expand-lg justify-content-center align-items-center h-75 mt-5" data-bs-ride="carousel" data-bs-theme="dark">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#banner" data-bs-slide-to="0" class="active p-3" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#banner" data-bs-slide-to="1" class="p-3" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#banner" data-bs-slide-to="2" class="p-3" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
-                        <div class="carousel-caption d-none d-md-block text-warning font-monospace">
-                            <h3>SHOPKART</h3>
-                            <h5>Welcome to the shopping paradise.</h5>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="/images/banner-2.jpg" alt="Product image" class="d-block w-100">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="/images/banner-3.jpg" alt="Product image" class="d-block w-100">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#banner" data-bs-slide-to="0" class="active p-3" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#banner" data-bs-slide-to="1" class="p-3" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#banner" data-bs-slide-to="2" class="p-3" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
+                    <div class="carousel-caption d-none d-md-block text-dark font-monospace">
+                        <h3>Welcome to the ShopKart</h3>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon p-5"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
-                    <span class="carousel-control-next-icon p-5"></span>
-                </button>
+                <div class="carousel-item">
+                    <img src="/images/banner-2.jpg" alt="Product image" class="d-block w-100">
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/banner-3.jpg" alt="Product image" class="d-block w-100">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon p-5"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
+                <span class="carousel-control-next-icon p-5"></span>
+            </button>
 		</nav>
         <div class="container d-flex justify-content-center p-1 gap-5">
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" data-bs-action="filter">Filter</button>
-            <div class="border border-2 border-secondary rounded d-flex justify-content-center align-items-center p-1 gap-1">
-                <p class="text-center text-success">
-                    PRICE
-                </p>
-                <cfoutput>
-                    <cfset variables.url = cgi.HTTP_URL>
-                    <cfset variables.url = REReplace(variables.url, "[&?]sort=[^&]*", "", "all")>
-                    <cfset variables.url = variables.url & (find('?', variables.url) ? '&' : '?')>
-                    <a href="#variables.url#sort=pricelow" class="btn btn-success">Low to High</a>
-                    <a href="#variables.url#sort=pricehigh" class="btn btn-success">High to Low</a>
-                </cfoutput>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">Filter</button>
+                <form  class="dropdown-menu gap-2 p-3" action="" method="post">
+                    <p>Filter By Price<p>
+                    <div class="form-floating">
+                        <input class="form-control bg-primary" type="number" name="minPrice" id="minPrice" min="0" placeholder="">
+                        <label class="form-label" for="minPrice">Minimum</label>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control bg-primary" type="number" name="maxPrice" id="maxPrice" placeholder="">
+                        <label class="form-label" for="maxPrice">Maximum</label>
+                    </div>
+                    <button name="filterbtn" id="filterbtn" type="submit" class="btn btn-outline-success">Filter</button>
+                </form>
             </div>
+            <cfoutput>
+                <cfset variables.url = cgi.HTTP_URL>
+                <cfset variables.url = REReplace(variables.url, "[&?]sort=[^&]*", "", "all")>
+                <cfset variables.url = variables.url & (find('?', variables.url) ? '&' : '?')>
+                <a href="#variables.url#sort=pricelow" class="btn btn-success">Low to High</a>
+                <a href="#variables.url#sort=pricehigh" class="btn btn-success">High to Low</a>
+            </cfoutput>
         </div>
         <div class="container-fluid d-flex flex-row flex-wrap justify-content-evenly gap-5 p-5">
             <cfif arrayLen(products) NEQ 0>
@@ -190,38 +205,6 @@
             <cfelse>
                 <h1 class="bg-warning shadow text-center text-dark">Products items Empty!!</h1>
             </cfif>
-        </div>
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" data-bs-theme="dark">
-            <div class="modal-dialog">
-                <div class="modal-content d-flex p-3">
-                    <div class="modal-header d-flex">
-                        <h2 id="modalhead" class="modal-title flex-grow-1 fw-bold text-primary text-center">Shipping Address Details</h2>
-                        <button type="button" class="btn-close border rounded" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form id="addressForm" name="addressForm" class="modal-body d-flex flex-column gap-2 p-3" action="" method="post" enctype="multipart/form-data">
-                        <div class="form-check">
-                            <input class="form-check-input bg-primary" type="radio" name="check" value="10000">
-                            <label class="form-check-label text-white">Price less than 10000</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input bg-primary" type="radio" name="check" value="10000,50000">
-                            <label class="form-check-label text-white">Price 10000 to 50000</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input bg-primary" type="radio" name="check" value="50000,100000">
-                            <label class="form-check-label text-white">Price 50000 to 100000</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input bg-primary" type="radio" name="check" value="100000,max">
-                            <label class="form-check-label text-white">Price more than 100000</label>
-                        </div>
-                    </form>
-                    <div class="modal-footer d-flex justify-content-between">
-                        <button name="filterbtn" id="filterbtn" type="submit" class="btn btn-outline-success fw-bold" form="addressForm">Filter</button>
-                        <button type="button" class="btn btn-outline-danger fw-bold" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
         </div>
 		<script type="text/javascript" src="/js/jQuery.js"></script>
 		<script type="text/javascript" src="/js/home.js"></script>
