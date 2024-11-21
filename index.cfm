@@ -141,7 +141,7 @@
                 <div class="carousel-item active">
                     <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
                     <div class="carousel-caption d-none d-md-block text-dark font-monospace">
-                        <h3>Welcome to the</h3>
+                        <h3>Welcome to the ShopKart</h3>
                     </div>
                 </div>
                 <div class="carousel-item">
