@@ -12,8 +12,23 @@
 <cfelse>
     <cfset argumentCollection.sort = 'random'>
 </cfif>
-<cfif structKeyExists(url, 'range')>
-    <cfset argumentCollection.range = url.range>
+<cfif structKeyExists(form, 'filter')
+    AND ((structKeyExists(form, 'minPrice')
+            AND len(form.minPrice) GT 0)
+        OR (structKeyExists(form, 'maxPrice')
+            AND len(form.maxPrice) GT 0))>
+    <cfset variables.range = ''>
+    <cfif len(form.minPrice) GT 0>
+        <cfset variables.range = listAppend(variables.range, form.minPrice)>
+    <cfelse>
+        <cfset variables.range = listAppend(variables.range, 'MIN')>
+    </cfif>
+    <cfif len(form.maxPrice) GT 0>
+        <cfset variables.range = listAppend(variables.range, form.maxPrice)>
+    <cfelse>
+        <cfset variables.range = listAppend(variables.range, 'MAX')>
+    </cfif>
+    <cfset argumentCollection.range = variables.range>
 </cfif>
 <cfif structKeyExists(url, 'keyword')>
     <cfset argumentCollection.search = url.keyword>
@@ -23,18 +38,6 @@
     <cfset argumentCollection.category = url.cat>
 </cfif>
 <cfset products = control.getProduct(argumentCollection=argumentCollection)>
-<cfif structKeyExists(form, 'filterbtn')
-    AND structKeyExists(form, 'minPrice')
-    AND structKeyExists(form, 'maxPrice')>
-    <cfset variables.range = ''>
-    <cfif structKeyExists(form, 'minPrice')>
-            <cfset variables.range = listAppend(variables.range, form.minPrice)>
-    </cfif>
-    <cfif structKeyExists(form, 'maxPrice')>
-            <cfset variables.range = listAppend(variables.range, form.maxPrice)>
-    </cfif>
-    <cflocation  url="index.cfm?range=#variables.range#" addToken="no">
-</cfif>
 <html lang="en">
 	<head>
 		<link href="/css/admin.css" rel="stylesheet">
@@ -168,7 +171,7 @@
                         <input class="form-control bg-primary" type="number" name="maxPrice" id="maxPrice" placeholder="">
                         <label class="form-label" for="maxPrice">Maximum</label>
                     </div>
-                    <button name="filterbtn" id="filterbtn" type="submit" class="btn btn-outline-success">Filter</button>
+                    <button name="filter" id="filter" type="submit" value="price" class="btn btn-outline-success">Filter</button>
                 </form>
             </div>
             <cfoutput>

@@ -448,23 +448,23 @@
                         name LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
                 </cfif>
                 <cfif structKeyExists(arguments, 'range')>
-                    <cfset local.rangeLen = listLen(arguments.range,',',true)>
-                    <cfif local.rangeLen EQ 2>
+                    <cfif listLen(arguments.range) EQ 2>
                         <cfset local.rangeArray = listToArray(arguments.range)>
-                        <cfif local.rangeArray[2] EQ 'max'>
+                        <cfif local.rangeArray[1] NEQ 'MIN'
+                            AND local.rangeArray[2] NEQ 'MAX'>
+                                AND
+                                    price
+                                        BETWEEN
+                                            <cfqueryparam value="#local.rangeArray[1]#" cfsqltype="cf_sql_decimal">
+                                        AND
+                                            <cfqueryparam value="#local.rangeArray[2]#" cfsqltype="cf_sql_decimal">
+                        <cfelseif local.rangeArray[1] EQ 'MIN'>
+                            AND
+                                price < <cfqueryparam value="#local.rangeArray[2]#" cfsqltype="cf_sql_decimal">
+                        <cfelseif local.rangeArray[2] EQ 'MAX'>
                             AND
                                 price > <cfqueryparam value="#local.rangeArray[1]#" cfsqltype="cf_sql_decimal">
-                        <cfelse>
-                            AND
-                                price
-                                    BETWEEN
-                                        <cfqueryparam value="#local.rangeArray[1]#" cfsqltype="cf_sql_decimal">
-                                    AND
-                                        <cfqueryparam value="#local.rangeArray[2]#" cfsqltype="cf_sql_decimal">
                         </cfif>
-                    <cfelseif local.rangeLen GT 0>
-                        AND
-                            price < <cfqueryparam value="#arguments.range#" cfsqltype="cf_sql_decimal">
                     </cfif>
                 </cfif>
                 <cfif structKeyExists(arguments, 'sort')>
