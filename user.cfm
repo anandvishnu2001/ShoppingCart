@@ -200,12 +200,16 @@
                             <cfoutput>
                                 <div class="card">
                                     <div class="card-header d-flex justify-content-evenly bg-primary gap-5">
-                                        <h5 class="flex-grow-1">
+                                        <h5 class="card-title flex-grow-1 d-grid ">
                                             <span class="text-white">Order No :</span>
                                             <span class="text-muted">#order.id#</span>
                                         </h5>
-                                        <a class="btn btn-info" href="order-invoice.cfm?order=#order.id#">
-                                            <img src="/images/pdf.png" class="img-fluid" alt="Cart" width="30" height="30">
+                                        <p class="card-text d-grid">
+                                            <span class="text-white">Date of Purchase :</span>
+                                            <span class="col-12 text-muted">#dateTimeFormat(order.date,'medium')#</span>
+                                        </p>
+                                        <a class="btn btn-outline-info" href="order-invoice.cfm?order=#order.id#">
+                                            <img src="/images/pdf.png" class="img-fluid" alt="Cart" width="40" height="40">
                                         </a>
                                     </div>
                                     <cfset variables.total = 0>
@@ -272,10 +276,6 @@
                                     </ul>
                                     <div class="card-footer">
                                         <div class="d-flex justify-content-between">
-                                            <p class="row card-text">
-                                                <span class="text-dark">Date of Purchase :</span>
-                                                <span class="col-12 text-muted">#dateTimeFormat(order.date,'medium')#</span>
-                                            </p>
                                             <p class="card-text">
                                                 <span class="text-dark">Total Billed Amount :</span>
                                                 <span class="text-muted">

@@ -1040,7 +1040,7 @@
             SELECT
                 o.orderid,
                 o.orderdate,
-                s.name,
+                s.name AS sname,
                 s.phone,
                 s.house,
                 s.street,
@@ -1052,7 +1052,7 @@
                 i.quantity,
                 i.price,
                 i.tax,
-                p.name,
+                p.name AS pname,
                 m.imageid,
                 m.image
                 
@@ -1077,6 +1077,8 @@
                 </cfif>
             AND
                 m.status = 1
+            ORDER BY
+                o.orderdate DESC
             ;
         </cfquery>
         <cfset local.output = []>
@@ -1095,7 +1097,7 @@
                     'price' = local.list.price,
                     'quantity' = local.list.quantity,
                     'tax' = local.list.tax,
-                    'name' = local.list.name,
+                    'name' = local.list.pname,
                     'images' = local.images
                 })>
             </cfloop>
@@ -1103,7 +1105,7 @@
                 "id" : local.list.orderid,
                 'date' = local.list.orderdate,
                 'shipping' = {
-                    'name' = local.list.name,
+                    'name' = local.list.sname,
                     'phone' = local.list.phone,
                     'house' = local.list.house,
                     'street' = local.list.street,
