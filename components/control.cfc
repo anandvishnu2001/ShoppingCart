@@ -596,8 +596,7 @@
             SET
                 <cfif structKeyExists(arguments, 'change') 
                     AND (local.check.quantity GT 1
-                        OR arguments.change EQ 'increase'
-                        OR arguments.change NEQ 'delete')>
+                        OR arguments.change EQ 'increase')>
                     quantity = quantity 
                         <cfif arguments.change EQ 'increase'>
                             +

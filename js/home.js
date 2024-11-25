@@ -4,17 +4,17 @@ function adjustNavbarPositions() {
 }
 
 function changeProduct(id,change) {
-    let data = {};
+    let input = {};
     if (id) {
-        data.product = id;
+        input.product = id;
     }
     if (change) {
-        data.change = change;
+        input.change = change;
     }
     $.ajax({
         url: '/components/control.cfc?method=editCart',
         type: 'GET',
-        data: data,
+        data: input,
         success: function(data){
             window.location.href = window.location.href;
         }
