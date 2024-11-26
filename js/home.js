@@ -3,47 +3,6 @@ function adjustNavbarPositions() {
     $('#category-nav').css('top', mainNavHeight + 'px');
 }
 
-function changeProduct(id,change) {
-    let input = {};
-    if (id) {
-        input.product = id;
-    }
-    if (change) {
-        input.change = change;
-    }
-    $.ajax({
-        url: '/components/control.cfc?method=editCart',
-        type: 'GET',
-        data: input,
-        success: function(data){
-            window.location.href = window.location.href;
-        }
-    });
-}
-
-function removeCartProduct(id) {
-    $.ajax({
-        url: '/components/control.cfc?method=editCart',
-        type: 'GET',
-        data: {
-            "product": id
-        },
-        success: function(data){
-            window.location.href = window.location.href;
-        }
-    });
-}
-
-function removeCart() {
-    $.ajax({
-        url: '/components/control.cfc?method=editCart',
-        type: 'GET',
-        success: function(data){
-            window.location.href = window.location.href;
-        }
-    });
-}
-
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -53,10 +12,6 @@ $(document).ready(adjustNavbarPositions);
 $(window).resize(adjustNavbarPositions);
 
 $(document).ready(function () {
-    $('.cart').click(function () {
-        changeProduct($(this).data('id') || null, $(this).data('action') || null);
-    });
-
     $("#address-card").hide();
 
     $("#order-card").hide();

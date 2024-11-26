@@ -1,15 +1,28 @@
 <cfset control = CreateObject("component", "components.control")>
-<cfif structKeyExists(session, 'user') 
-    AND session.user.access>
+<cfif NOT structKeyExists(session, 'user')
+    OR (structKeyExists(session, 'user')
+        AND NOT session.user.access)>
+            <cfset session.user = {
+                "access" = false
+            }>
+</cfif>
+<cfif structKeyExists(url, 'action')>
+    <cfset argumentCollection = {
+        'change' = url.action
+    }>
+    <cfif structKeyExists(url, 'id')>
+        <cfset argumentCollection.product = url.id>
+    </cfif>
+    <cfset control.editCart(argumentCollection=argumentCollection)>
+    <cflocation  url="cart" addToken="no">
+</cfif>
+<cfif session.user.access>
     <cfif structKeyExists(url, 'pro')>
         <cfset control.addCart(product=url.pro,user=session.user.user)>
-        <cflocation  url="cart.cfm" addToken="no">
+        <cflocation  url="cart" addToken="no">
     </cfif>
     <cfset variables.carter = control.getCart(session.user.user)>
 <cfelse>
-    <cfset session.user = {
-        "access" = false
-    }>
     <cfset variables.carter = {}>
 </cfif>
 <html lang="en">
@@ -25,7 +38,7 @@
             </a>
             <ul class="navbar-nav nav-tabs nav-justified">
                 <li class="nav-item">
-                    <a class="nav-link active" href="cart.cfm">
+                    <a class="nav-link active" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
                             AND control.countCart() GT 0>
@@ -79,15 +92,14 @@
                                         </div>
                                         <div class="col-5 d-flex flex-column justify-content-evenly fw-bold">
                                             <p class="h4 card-title text-info">#item.name#</p>
-                                            <cfset variables.cartTotal += (item.price+(item.price*item.tax/100))*item.quantity>
-                                            <p class="card-text text-danger">#(item.price+(item.price*item.tax/100))*item.quantity#</p>
+                                        <p class="card-text text-danger">#numberFormat(item.totalprice)#</p>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-evenly">
-                                        <button class="cart btn btn-secondary rounded-pill" data-id="#item.product#" data-action="decrease">-</button>
+                                        <a class="btn btn-secondary rounded-pill" href="cart.cfm?action=decrease&id=#item.product#">-</a>
                                         <p class="card-text text-muted">#item.quantity#</p>
-                                        <button class="cart btn btn-secondary rounded-pill" data-id="#item.product#" data-action="increase">+</button>
-                                        <button class="cart btn btn-danger" data-id="#item.product#" data-action="delete">Remove item</button>
+                                        <a class="btn btn-secondary rounded-pill" href="cart.cfm?action=increase&id=#item.product#">+</a>
+                                        <a class="btn btn-danger" href="cart.cfm?action=delete&id=#item.product#">Remove item</a>
                                     </div>
                                 </li>
                             </cfoutput>
@@ -114,12 +126,13 @@
                     </cfif>
                 </ul>
             </div>
-            <cfif arrayLen(variables.carter.items) NEQ 0>
+            <cfif structKeyExists(variables.carter, 'items')
+                AND arrayLen(variables.carter.items) NEQ 0>
                 <div class="card bg-light fw-bold col-4 p-3 gap-5 p-5">
                     <cfoutput>
-                        <p class="card-text bg-info text-center text-danger">Total Price :<br>#variables.cartTotal#</p>
+                        <p class="card-text bg-info text-center text-danger">Total Price :<br>#numberFormat(variables.carter.totalprice)#</p>
                         <a class="btn btn-success" href="payment.cfm">Check out</a>
-                        <button class="cart btn btn-danger">Empty cart</button>
+                        <a class="btn btn-danger" href="cart.cfm?action=delete">Empty cart</a>
                     </cfoutput>
                 </div>
             </cfif>

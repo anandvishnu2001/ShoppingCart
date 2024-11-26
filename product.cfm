@@ -1,6 +1,10 @@
 <cfset control = CreateObject("component", "components.control")>
-<cfif structKeyExists(session, 'user') 
-    AND session.user.access>
+<cfif NOT structKeyExists(session, 'user')
+    OR (structKeyExists(session, 'user')
+        AND NOT session.user.access)>
+            <cfset session.user = {
+                "access" = false
+            }>
 </cfif>
 <html lang="en">
 	<head>
@@ -30,9 +34,10 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart.cfm">
+                    <a class="nav-link" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
-                        <cfif structKeyExists(session.user, 'user')
+                        <cfif structKeyExists(session, 'user')
+                            AND session.user.access
                             AND control.countCart() GT 0>
                             <cfoutput>
                                 <span class="badge bg-danger rounded-pill">#control.countCart()#</span>

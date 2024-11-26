@@ -72,7 +72,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart.cfm">
+                    <a class="nav-link" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
                             AND control.countCart() GT 0>
