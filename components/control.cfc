@@ -852,8 +852,14 @@
             </cfquery>
             <cfset local.output['order'] = local.id>
             <cfset local.items = []>
+            <cfset local.total = {
+                'price' = 0,
+                'tax' = 0
+            }>
             <cfif arguments.data.idType EQ 'cart'>
                 <cfset local.cart = getCart(arguments.data.user)>
+                <cfset local.total.price = local.cart.totalprice>
+                <cfset local.total.tax = local.cart.totaltax>
                 <cfloop array="#local.cart.items#" item="item">
                     <cfset arrayAppend(local.items, {
                         'product' = item.product,
@@ -866,12 +872,23 @@
             <cfelseif arguments.data.idType EQ 'product'>
                 <cfset local.product = getProduct(product=arguments.data.id)>
                 <cfset arrayAppend(local.items, {
-                        'product' = local.product[1].id,
-                        'quantity' = 1,
-                        'tax' = local.product[1].tax,
-                        'price' = local.product[1].price
-                    })>
+                    'product' = local.product[1].id,
+                    'quantity' = 1,
+                    'tax' = local.product[1].tax,
+                    'price' = local.product[1].price
+                })>
+                <cfset local.total.price = local.product[1].price+(local.product[1].price*local.product[1].tax/100)>
+                <cfset local.total.tax = local.product[1].price*local.product[1].tax/100>
             </cfif>
+            <cfquery name="local.addTotal">
+                UPDATE
+                    ordercart
+                SET
+                    price = <cfqueryparam value="#local.total.price#" cfsqltype="cf_sql_decimal">,
+                    tax = <cfqueryparam value="#local.total.tax#" cfsqltype="cf_sql_integer">
+                WHERE
+                    orderid = <cfqueryparam value="#local.id#" cfsqltype="cf_sql_varchar">
+            </cfquery>
             <cfif arrayLen(local.items) GT 0>
                 <cfquery name="local.add" result="result">
                     INSERT INTO
@@ -1044,6 +1061,8 @@
             SELECT
                 o.orderid,
                 o.orderdate,
+                o.price AS oprice,
+                o.tax AS otax,
                 s.name AS sname,
                 s.phone,
                 s.house,
@@ -1054,8 +1073,8 @@
                 s.pincode,
                 i.productid,
                 i.quantity,
-                i.price,
-                i.tax,
+                i.price AS iprice,
+                i.tax AS itax,
                 (i.price+(i.price*i.tax/100))*i.quantity AS tprice,
                 (i.price*i.tax/100)*i.quantity AS ttax,
                 p.name AS pname,
@@ -1090,8 +1109,6 @@
         </cfquery>
         <cfset local.output = []>
         <cfloop query="local.list" group="orderid">
-            <cfset local.price = 0>
-            <cfset local.tax = 0>
             <cfset local.items = []>
             <cfloop group="productid">
                 <cfset local.images = []>
@@ -1103,22 +1120,20 @@
                 </cfloop>
                 <cfset arrayAppend(local.items, {
                     'product' = local.list.productid,
-                    'price' = local.list.price,
+                    'price' = local.list.iprice,
                     'quantity' = local.list.quantity,
-                    'tax' = local.list.tax,
+                    'tax' = local.list.itax,
                     'totalprice' = local.list.tprice,
                     'totaltax' = local.list.ttax,
                     'name' = local.list.pname,
                     'images' = local.images
                 })>
-                <cfset local.price += local.list.tprice>
-                <cfset local.tax += local.list.ttax>
             </cfloop>
             <cfset arrayAppend(local.output, {
                 "id" : local.list.orderid,
                 'date' = local.list.orderdate,
-                'totalprice' = local.price,
-                'totaltax' = local.tax,
+                'totalprice' = local.list.oprice,
+                'totaltax' = local.list.otax,
                 'shipping' = {
                     'name' = local.list.sname,
                     'phone' = local.list.phone,
