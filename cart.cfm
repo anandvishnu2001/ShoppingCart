@@ -131,7 +131,7 @@
                 <div class="card bg-light fw-bold col-4 p-3 gap-5 p-5">
                     <cfoutput>
                         <p class="card-text bg-info text-center text-danger">Total Price :<br>#numberFormat(variables.carter.totalprice)#</p>
-                        <a class="btn btn-success" href="payment.cfm">Check out</a>
+                        <a class="btn btn-success" href="payment">Check out</a>
                         <a class="btn btn-danger" href="cart.cfm?action=delete">Empty cart</a>
                     </cfoutput>
                 </div>

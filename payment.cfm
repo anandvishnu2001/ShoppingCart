@@ -60,7 +60,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="index.cfm">
+            <a class="flex-grow-1 navbar-brand ms-2" href="/index.cfm">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
@@ -196,7 +196,7 @@
                     </cfoutput>>
                     Payment
                 </button>
-                <a class="btn btn-danger" href="cart">Cancel</a>
+                <a class="btn btn-danger" href="/cart">Cancel</a>
             </div>
         </div>
         <div class="modal fade" id="modal" data-bs-theme="dark">

@@ -108,7 +108,7 @@
                                     <a class="card-link btn btn-success" href="cart.cfm?pro=#products[1].id#">
                                         Add to <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                                     </a>
-                                    <a class="card-link btn btn-success" href="payment.cfm?pro=#products[1].id#">
+                                    <a class="card-link btn btn-success" href="payment/#products[1].id#">
                                         Buy Now
                                     </a>
                                 </div>
