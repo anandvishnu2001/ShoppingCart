@@ -46,6 +46,22 @@ $(document).ready(function () {
         $("#address-card").show();
     });
 
+    $('#deleter').on('hidden.bs.modal',function(event){
+        $('#product').val('');
+    });
+
+    $('#deleter').on('show.bs.modal',function(event){
+        let button = $(event.relatedTarget);
+        if(button.data("bs-id")){
+            $('#modalhead').html('Are you sure you want to delete this item?');
+            $('#product').val(button.data("bs-id"));
+        }
+        else{
+            $('#modalhead').html('Are you sure you want to empty the cart?');
+            $('#product').val('');
+        }
+    });
+
     $('#modal').on('hidden.bs.modal',function(event){
         $('#addressForm').find('input').removeAttr('required').val();
         $('#addressForm')[0].reset();

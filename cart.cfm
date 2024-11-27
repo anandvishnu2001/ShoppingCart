@@ -6,12 +6,19 @@
                 "access" = false
             }>
 </cfif>
-<cfif structKeyExists(url, 'action')>
-    <cfset argumentCollection = {
-        'change' = url.action
-    }>
-    <cfif structKeyExists(url, 'id')>
-        <cfset argumentCollection.product = url.id>
+<cfif structKeyExists(form, 'dltbtn') OR structKeyExists(url, 'action')>
+    <cfset argumentCollection = {}>
+    <cfif structKeyExists(form, 'dltbtn')>
+        <cfset argumentCollection.change = 'delete'>
+        <cfif structKeyExists(form, 'product') AND len(form.product) NEQ 0>
+            <cfset argumentCollection.product = form.product>
+        </cfif>
+    </cfif>
+    <cfif structKeyExists(url, 'action')>
+        <cfset argumentCollection.change = url.action>
+        <cfif structKeyExists(url, 'id')>
+            <cfset argumentCollection.product = url.id>
+        </cfif>
     </cfif>
     <cfset control.editCart(argumentCollection=argumentCollection)>
     <cflocation  url="cart" addToken="no">
@@ -96,10 +103,20 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-evenly">
-                                        <a class="btn btn-secondary rounded-pill" href="cart.cfm?action=decrease&id=#item.product#">-</a>
+                                        <a class="btn btn-secondary rounded-pill"
+                                            <cfif item.quantity GT 1>
+                                                href="cart.cfm?action=decrease&id=#item.product#"
+                                            <cfelse>
+                                                data-bs-toggle="modal" data-bs-target="#chr(35)#deleter" data-bs-id="#item.product#"
+                                            </cfif>>
+                                            -
+                                        </a>
                                         <p class="card-text text-muted">#item.quantity#</p>
                                         <a class="btn btn-secondary rounded-pill" href="cart.cfm?action=increase&id=#item.product#">+</a>
-                                        <a class="btn btn-danger" href="cart.cfm?action=delete&id=#item.product#">Remove item</a>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#chr(35)#deleter"
+                                            data-bs-id="#item.product#">
+                                                Remove item
+                                        </button>
                                     </div>
                                 </li>
                             </cfoutput>
@@ -132,10 +149,29 @@
                     <cfoutput>
                         <p class="card-text bg-info text-center text-danger">Total Price :<br>#numberFormat(variables.carter.totalprice)#</p>
                         <a class="btn btn-success" href="payment">Check out</a>
-                        <a class="btn btn-danger" href="cart.cfm?action=delete">Empty cart</a>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#chr(35)#deleter">
+                            Empty cart
+                        </button>
                     </cfoutput>
                 </div>
             </cfif>
+        </div>
+        <div class="modal fade" id="deleter" tabindex="-1" role="dialog" data-bs-theme="dark">
+            <div class="modal-dialog">
+                <div class="modal-content d-flex p-3">
+                    <div class="modal-header d-flex">
+                        <h2 id="modalhead" class="modal-title flex-grow-1 fw-bold text-warning text-center"></h2>
+                        <button type="button" class="btn-close border rounded" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="modalForm" name="modalForm" action="" method="post">
+                        <input type="hidden" name="product" id="product">
+                    </form>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button name="dltbtn" id="dltbtn" type="submit" class="btn btn-outline-success fw-bold" form="modalForm">Yes</button>
+                        <button type="button" class="btn btn-outline-danger fw-bold" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
         </div>
 		<script type="text/javascript" src="/js/jQuery.js"></script>
 		<script type="text/javascript" src="/js/home.js"></script>

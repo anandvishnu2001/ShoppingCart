@@ -578,7 +578,8 @@
     <cffunction  name="editCart" access="remote" returnFormat="JSON">
         <cfargument  name="product" type="integer" required="false">
         <cfargument  name="change" type="string" required="false">
-        <cfif structKeyExists(arguments, 'change')>
+        <cfif structKeyExists(arguments, 'change')
+            AND structKeyExists(arguments, 'product')>
             <cfquery name="local.check">
                 SELECT
                     quantity
