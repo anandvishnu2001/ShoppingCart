@@ -54,27 +54,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <cfset variables.total = 0>
-                        <cfset variables.tax = 0>
                         <cfloop array="#variables.orders[1].items#" index="item">
                             <tr>
                                 <td>#item.name#</td>
                                 <td>#item.quantity#</td>
-                                <td>#chr(8377)##numberFormat(item.price,'__.00')#</td>
+                                <td>#chr(8377)##numberFormat(item.price)#</td>
                                 <td>#item.tax#%</td>
-                                <td>#chr(8377)##numberFormat(item.quantity*(item.price+(item.price*item.tax/100)),'__.00')#</td>
+                                <td>#chr(8377)##numberFormat(item.totalprice)#</td>
                             </tr>
-                            <cfset variables.total += item.quantity*(item.price+(item.price*item.tax/100))>
-                            <cfset variables.tax += item.quantity*(item.price*item.tax/100)>
                         </cfloop>
                     </tbody>
                 </table>
 
-                <p class="text-right"><strong>Total Due:</strong> #chr(8377)##numberFormat(variables.total, '__.00')#</p>
+                <p class="text-right"><strong>Total Due:</strong> #chr(8377)##numberFormat(variables.orders[1].totalprice)#</p>
                 <hr>
-                <p class="text-right"><strong>Tax:</strong> #chr(8377)##numberFormat(variables.tax, '__.00')#</p>
+                <p class="text-right"><strong>Tax:</strong> #chr(8377)##numberFormat(variables.orders[1].totaltax)#</p>
                 <hr>
-                <p class="text-right"><strong>Total Payed:</strong> #chr(8377)##numberFormat(variables.total, '__.00')#</p>
+                <p class="text-right"><strong>Total Payed:</strong> #chr(8377)##numberFormat(variables.orders[1].totalprice)#</p>
                 <hr>
 
                 <div style="margin-top: 30px;">

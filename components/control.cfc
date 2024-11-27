@@ -595,9 +595,9 @@
                 cart
             SET
                 <cfif structKeyExists(arguments, 'change') 
+                    AND arguments.change NEQ 'delete'
                     AND (local.check.quantity GT 1
-                        OR arguments.change EQ 'increase'
-                        OR arguments.change NEQ 'delete')>
+                        OR arguments.change EQ 'increase')>
                     quantity = quantity 
                         <cfif arguments.change EQ 'increase'>
                             +
@@ -627,6 +627,8 @@
                 p.name,
                 p.price,
                 p.tax,
+                (p.price+(p.price*p.tax/100))*c.quantity AS tprice,
+                (p.price*p.tax/100)*c.quantity AS ttax,
                 m.imageid,
                 m.image
             FROM
@@ -646,7 +648,9 @@
         </cfquery>
         <cfset local.output = {
             'user' = arguments.user,
-            'items' = []
+            'items' = [],
+            'totalprice' = 0,
+            'totaltax' = 0
         }>
         <cfloop query="local.list" group="productid">
             <cfset local.images = []>
@@ -662,9 +666,13 @@
                 "quantity" : local.list.quantity,
                 "price" : local.list.price,
                 "tax" : local.list.tax,
+                "totalprice" : local.list.tprice,
+                "totaltax" : local.list.ttax,
                 "name" : local.list.name,
                 "images" : local.images
             })>
+            <cfset local.output.totalprice += local.list.tprice>
+            <cfset local.output.totaltax += local.list.ttax>
         </cfloop>
         <cfreturn local.output>
     </cffunction>
@@ -995,27 +1003,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <cfset local.total = 0>
-                                        <cfset local.tax = 0>
                                         <cfloop array="#local.order[1].items#" index="item">
                                             <tr>
                                                 <td>#item.name#</td>
                                                 <td>#item.quantity#</td>
-                                                <td>#chr(8377)##numberFormat(item.price,'__.00')#</td>
+                                                <td>#chr(8377)##numberFormat(item.price)#</td>
                                                 <td>#item.tax#%</td>
-                                                <td>#chr(8377)##numberFormat(item.quantity*(item.price+(item.price*item.tax/100)),'__.00')#</td>
+                                                <td>#chr(8377)##numberFormat(item.totalprice)#</td>
                                             </tr>
-                                            <cfset local.total += item.quantity*(item.price+(item.price*item.tax/100))>
-                                            <cfset local.tax += item.quantity*(item.price*item.tax/100)>
                                         </cfloop>
                                     </tbody>
                                 </table>
 
-                                <p class="text-right"><strong>Total Due:</strong> #chr(8377)##numberFormat(local.total, '__.00')#</p>
+                                <p class="text-right"><strong>Total Due:</strong> #chr(8377)##numberFormat(local.order[1].totalprice)#</p>
                                 <hr>
-                                <p class="text-right"><strong>Tax:</strong> #chr(8377)##numberFormat(local.tax, '__.00')#</p>
+                                <p class="text-right"><strong>Tax:</strong> #chr(8377)##numberFormat(local.order[1].totaltax)#</p>
                                 <hr>
-                                <p class="text-right"><strong>Total Payed:</strong> #chr(8377)##numberFormat(local.total, '__.00')#</p>
+                                <p class="text-right"><strong>Total Payed:</strong> #chr(8377)##numberFormat(local.order[1].totalprice)#</p>
                                 <hr>
 
                                 <div style="margin-top: 30px;">
@@ -1040,7 +1044,7 @@
             SELECT
                 o.orderid,
                 o.orderdate,
-                s.name,
+                s.name AS sname,
                 s.phone,
                 s.house,
                 s.street,
@@ -1052,7 +1056,9 @@
                 i.quantity,
                 i.price,
                 i.tax,
-                p.name,
+                (i.price+(i.price*i.tax/100))*i.quantity AS tprice,
+                (i.price*i.tax/100)*i.quantity AS ttax,
+                p.name AS pname,
                 m.imageid,
                 m.image
                 
@@ -1077,10 +1083,15 @@
                 </cfif>
             AND
                 m.status = 1
+            ORDER BY
+                o.orderdate DESC,
+                o.orderid
             ;
         </cfquery>
         <cfset local.output = []>
         <cfloop query="local.list" group="orderid">
+            <cfset local.price = 0>
+            <cfset local.tax = 0>
             <cfset local.items = []>
             <cfloop group="productid">
                 <cfset local.images = []>
@@ -1095,15 +1106,21 @@
                     'price' = local.list.price,
                     'quantity' = local.list.quantity,
                     'tax' = local.list.tax,
-                    'name' = local.list.name,
+                    'totalprice' = local.list.tprice,
+                    'totaltax' = local.list.ttax,
+                    'name' = local.list.pname,
                     'images' = local.images
                 })>
+                <cfset local.price += local.list.tprice>
+                <cfset local.tax += local.list.ttax>
             </cfloop>
             <cfset arrayAppend(local.output, {
                 "id" : local.list.orderid,
                 'date' = local.list.orderdate,
+                'totalprice' = local.price,
+                'totaltax' = local.tax,
                 'shipping' = {
-                    'name' = local.list.name,
+                    'name' = local.list.sname,
                     'phone' = local.list.phone,
                     'house' = local.list.house,
                     'street' = local.list.street,
