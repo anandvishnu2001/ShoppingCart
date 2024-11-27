@@ -12,19 +12,19 @@
 <cfelse>
     <cfset argumentCollection.sort = 'random'>
 </cfif>
-<cfif structKeyExists(form, 'filter')
-    AND ((structKeyExists(form, 'minPrice')
-            AND len(form.minPrice) GT 0)
-        OR (structKeyExists(form, 'maxPrice')
-            AND len(form.maxPrice) GT 0))>
+<cfif structKeyExists(url, 'filter')
+    AND ((structKeyExists(url, 'minPrice')
+            AND len(url.minPrice) GT 0)
+        OR (structKeyExists(url, 'maxPrice')
+            AND len(url.maxPrice) GT 0))>
     <cfset variables.range = ''>
-    <cfif len(form.minPrice) GT 0>
-        <cfset variables.range = listAppend(variables.range, form.minPrice)>
+    <cfif len(url.minPrice) GT 0>
+        <cfset variables.range = listAppend(variables.range, url.minPrice)>
     <cfelse>
         <cfset variables.range = listAppend(variables.range, 'MIN')>
     </cfif>
-    <cfif len(form.maxPrice) GT 0>
-        <cfset variables.range = listAppend(variables.range, form.maxPrice)>
+    <cfif len(url.maxPrice) GT 0>
+        <cfset variables.range = listAppend(variables.range, url.maxPrice)>
     <cfelse>
         <cfset variables.range = listAppend(variables.range, 'MAX')>
     </cfif>
@@ -161,7 +161,7 @@
         <div class="container d-flex justify-content-center p-1 gap-5">
             <div class="dropdown">
                 <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">Filter</button>
-                <form  class="dropdown-menu gap-2 p-3" action="" method="post">
+                <form  class="dropdown-menu gap-2 p-3" action="" method="get">
                     <p>Filter By Price<p>
                     <div class="form-floating">
                         <input class="form-control bg-primary" type="number" name="minPrice" id="minPrice" min="0" placeholder="">
