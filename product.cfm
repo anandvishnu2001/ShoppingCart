@@ -34,7 +34,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart">
+                    <a class="nav-link" href="/cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session, 'user')
                             AND session.user.access
@@ -105,7 +105,7 @@
                                 <h3 class="card-text text-muted">#products[1].description#</h3>
                                 <h2 class="card-text text-danger">#products[1].price+(products[1].price*products[1].tax/100)#</h2>
                                 <div class="container-fluid btn-group btn-group-lg">
-                                    <a class="card-link btn btn-success" href="cart.cfm?pro=#products[1].id#">
+                                    <a class="card-link btn btn-success" href="/cart.cfm?pro=#products[1].id#">
                                         Add to <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                                     </a>
                                     <a class="card-link btn btn-success" href="payment/#products[1].id#">

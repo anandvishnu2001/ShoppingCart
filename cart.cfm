@@ -38,14 +38,14 @@
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
-		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
+		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
             <a class="navbar-brand ms-2" href="index.cfm">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
-            <ul class="navbar-nav nav-tabs nav-justified">
+            <ul class="w-25 navbar-nav nav-tabs nav-justified">
                 <li class="nav-item">
-                    <a class="nav-link active" href="cart">
+                    <a class="nav-link active" href="/cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
                             AND control.countCart() GT 0>
@@ -105,14 +105,14 @@
                                     <div class="d-flex justify-content-evenly">
                                         <a class="btn btn-secondary rounded-pill"
                                             <cfif item.quantity GT 1>
-                                                href="cart.cfm?action=decrease&id=#item.product#"
+                                                href="/cart.cfm?action=decrease&id=#item.product#"
                                             <cfelse>
                                                 data-bs-toggle="modal" data-bs-target="#chr(35)#deleter" data-bs-id="#item.product#"
                                             </cfif>>
                                             -
                                         </a>
                                         <p class="card-text text-muted">#item.quantity#</p>
-                                        <a class="btn btn-secondary rounded-pill" href="cart.cfm?action=increase&id=#item.product#">+</a>
+                                        <a class="btn btn-secondary rounded-pill" href="/cart.cfm?action=increase&id=#item.product#">+</a>
                                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#chr(35)#deleter"
                                             data-bs-id="#item.product#">
                                                 Remove item
