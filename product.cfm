@@ -13,7 +13,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="index.cfm">
+            <a class="flex-grow-1 navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
@@ -69,7 +69,7 @@
                         <cfset breadcrumbSub = control.getSubcategory(subcategory=products[1].subcategory)>
                         <cfset breadcrumbCat = control.getCategory(category=breadcrumbSub[1].category)>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-decoration-none" href="index.cfm">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-decoration-none" href="/home">Home</a></li>
                             <li class="breadcrumb-item">
                                 <a class="text-decoration-none" href="index.cfm?cat=#breadcrumbCat[1].id#">
                                     #breadcrumbCat[1].name#

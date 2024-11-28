@@ -39,7 +39,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="navbar-brand ms-2" href="index.cfm">
+            <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
@@ -124,7 +124,7 @@
                     <cfelseif session.user.access>
                         <div class="col-md-6 col-12 d-grid mx-auto">
                             <h1 class="bg-warning shadow text-center text-dark">Cart is Empty!!</h1>
-                            <a class="btn btn-outline-info" href="index.cfm">Explore our products</a>
+                            <a class="btn btn-outline-info" href="/home">Explore our products</a>
                         </div>
                     <cfelse>
                         <div class="col-md-6 col-12 d-grid mx-auto">

@@ -45,7 +45,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="index.cfm">
+            <a class="flex-grow-1 navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
@@ -140,8 +140,8 @@
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
-                    <div class="carousel-caption d-none d-md-block text-dark">
-                        <h3>Welcome to the ShopKart</h3>
+                    <div class="carousel-caption w-25 d-none d-md-block mx-auto my-5">
+                        <h3 class="card">Welcome to the ShopKart</h3>
                     </div>
                 </div>
                 <div class="carousel-item">
