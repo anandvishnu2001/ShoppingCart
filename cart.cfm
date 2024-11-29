@@ -21,12 +21,12 @@
         </cfif>
     </cfif>
     <cfset control.editCart(argumentCollection=argumentCollection)>
-    <cflocation  url="cart" addToken="no">
+    <cflocation  url="/cart" addToken="no">
 </cfif>
 <cfif session.user.access>
     <cfif structKeyExists(url, 'pro')>
         <cfset control.addCart(product=url.pro,user=session.user.user)>
-        <cflocation  url="cart" addToken="no">
+        <cflocation  url="/cart" addToken="no">
     </cfif>
     <cfset variables.carter = control.getCart(session.user.user)>
 <cfelse>
@@ -43,7 +43,7 @@
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
-            <ul class="w-25 navbar-nav nav-tabs nav-justified">
+            <ul class="navbar-nav nav-tabs nav-justified w-25">
                 <li class="nav-item">
                     <a class="nav-link active" href="/cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
@@ -64,7 +64,7 @@
                                 </cfoutput>
                             </a>
                     <cfelse>
-                        <a class="nav-link" href="login.cfm">
+                        <a class="nav-link" href="/login.cfm">
                             <img src="/images/login.png" class="img-fluid" alt="Login" width="30" height="30">
                         </a>
                     </cfif>
@@ -132,9 +132,9 @@
                             <h3 class="text-center text-muted">Login to see your items</h3>
                             <a class="btn btn-outline-success btn-block"
                                 <cfif structKeyExists(url, 'pro')>
-                                    <cfoutput>href="login.cfm?pro=#url.pro#&site=cart"</cfoutput>
+                                    <cfoutput>href="/login.cfm?pro=#url.pro#&site=cart"</cfoutput>
                                 <cfelse>
-                                    href="login.cfm"
+                                    href="/login.cfm"
                                 </cfif>
                                 >
                                 Login

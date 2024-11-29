@@ -3,9 +3,9 @@
     AND session.user.access>
     <cfset variables.carter = control.getCart(session.user.user)>
 <cfelseif structKeyExists(url, 'pro')>
-    <cflocation url="login.cfm?pro=#url.pro#&site=pay" addToken="no">
+    <cflocation url="/login.cfm?pro=#url.pro#&site=pay" addToken="no">
 <cfelse>
-    <cflocation url="login.cfm" addToken="no">
+    <cflocation url="/login.cfm" addToken="no">
 </cfif>
 <cfif structKeyExists(form, 'okbtn')>
     <cfset variables.shipping = {
@@ -42,7 +42,7 @@
     <cfset variables.output = control.payOrder(variables.order)>
     <cfdump  var="#variables.output#">
     <cfif arrayLen(variables.output.error) EQ 0 AND structKeyExists(variables.output, 'order')>
-        <cflocation  url="confirm.cfm?order=#variables.output.order#" addToken="no">
+        <cflocation  url="/confirm.cfm?order=#variables.output.order#" addToken="no">
     <cfelse>
         <div class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -59,8 +59,8 @@
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
-		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="/home">
+		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
+            <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>

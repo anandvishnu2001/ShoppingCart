@@ -17,15 +17,15 @@
 		AND session.user.access>
 			<cfif structKeyExists(url, 'pro') AND structKeyExists(url, 'site')>
 				<cfif url.site EQ 'cart'>
-					<cflocation url="cart.cfm?pro=#url.pro#" addToken="no">
+					<cflocation url="/cart/#url.pro#" addToken="no">
 				<cfelseif url.site EQ 'pay'>
-					<cflocation url="payment.cfm?pro=#url.pro#" addToken="no">
+					<cflocation url="/payment/#url.pro#" addToken="no">
 				</cfif>
 			<cfelseif structKeyExists(url, 'log')
 				AND url.log EQ 1>
-					<cflocation url="user.cfm" addToken="no">
+					<cflocation url="/user.cfm" addToken="no">
 			<cfelse>
-				<cflocation url="index.cfm" addToken="no">
+				<cflocation url="/home" addToken="no">
 			</cfif>
 	<cfelse>
         <nav class="alert alert-danger alert-dismissible fade show text-center z-3 fw-bold">
@@ -40,14 +40,14 @@
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body class="container-fluid h-100 p-0 d-flex flex-column justify-content-center align-items-center">
-		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-2 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="navbar-brand" href="/home">
+		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-2 fw-bold fixed-top" data-bs-theme="dark">
+            <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
-            <ul class="navbar-nav nav-tabs nav-justified">
+            <ul class="navbar-nav nav-tabs nav-justified w-25">
                 <li class="nav-item">
-                    <a class="nav-link" href="cart">
+                    <a class="nav-link" href="/cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                     </a>
                 </li>

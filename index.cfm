@@ -45,7 +45,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="/home">
+            <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
@@ -55,14 +55,14 @@
                     <img src="/images/search.png" class="img-fluid" alt="Cart" width="30" height="30">
                 </button>
             </form>
-            <ul class="flex-grow-1 navbar-nav nav-tabs nav-justified">
+            <ul class="navbar-nav nav-tabs nav-justified w-25">
                 <li class="nav-item dropdown" title="Menu">
-                    <a class="nav-link dropdown-toggle <cfif structKeyExists(url, 'cat')>active</cfif>" href="" data-bs-toggle="dropdown">
+                    <a class="nav-link <cfif structKeyExists(url, 'cat')>active</cfif>" href="" data-bs-toggle="dropdown">
                         <img src="/images/menu.png" class="img-fluid" alt="Cart" width="30" height="30">
                     </a>
                     <ul class="dropdown-menu">
                         <cfset categories = control.getCategory()>
-                        <cfloop array="#categories#" item="item">
+                        <cfloop array="#categories#" index="index" item="item">
                             <cfoutput>
                                 <li>
                                     <a id="#item.id#" class="dropdown-item" href="index.cfm?cat=#item.id#">#item.name#</a>
@@ -99,7 +99,7 @@
             </ul>
 		</nav>
         <cfif structKeyExists(url, 'cat')>
-            <nav id="category-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-secondary z-2 fixed-top" data-bs-theme="dark">
+            <nav id="category-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-secondary z-2 fixed-top" data-bs-theme="dark">
                 <ul class="flex-grow-1 navbar-nav nav-tabs nav-justified">
                     <cfset categories = control.getCategory()>
                     <cfloop array="#categories#" item="category">
@@ -107,7 +107,7 @@
                             <li class="nav-item dropdown">
                                 <a id="#category.id#" class="nav-link
                                     <cfif category.id EQ url.cat>active</cfif>
-                                    dropdown-toggle" 
+                                    " 
                                     href="index.cfm?cat=#category.id#"
                                     data-bs-toggle="dropdown">
                                     #category.name#
@@ -160,7 +160,7 @@
 		</nav>
         <div class="container d-flex justify-content-center p-1 gap-5">
             <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">Filter</button>
+                <button class="btn btn-outline-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside">Filter</button>
                 <form  class="dropdown-menu gap-2 p-3" action="" method="get">
                     <p>Filter By Price<p>
                     <div class="form-floating">

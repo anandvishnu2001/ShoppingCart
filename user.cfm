@@ -1,7 +1,7 @@
 <cfset control = CreateObject("component", "components.control")>
 <cfif NOT structKeyExists(session, "user") 
     OR NOT session.user.access>
-        <cflocation  url="login.cfm?log=1" addToken="no">
+        <cflocation  url="/login.cfm?log=1" addToken="no">
 <cfelse>
     <cfset variables.carter = control.getCart(session.user.user)>
 </cfif>
@@ -48,14 +48,12 @@
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
-		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
-            <div class="flex-grow-1">
-                <a class="navbar-brand ms-2" href="/home">
-                    <img src="/images/shop.png" width="40" height="40" class="img-fluid">
-                    ShopKart
-                </a>
-            </div>
-            <ul class="flex-grow-1 navbar-nav nav-tabs nav-justified">
+		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
+            <a class="navbar-brand ms-2" href="/home">
+                <img src="/images/shop.png" width="40" height="40" class="img-fluid">
+                ShopKart
+            </a>
+            <ul class="navbar-nav nav-tabs nav-justified w-25">
                 <li class="nav-item">
                     <a class="nav-link" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">

@@ -2,10 +2,10 @@
 <cfif structKeyExists(session, 'user') 
     AND session.user.access>
     <cfif NOT structKeyExists(url, 'order')>
-        <cflocation url="index.cfm" addToken="no">
+        <cflocation url="/index.cfm" addToken="no">
     </cfif>
 <cfelse>
-    <cflocation url="login.cfm" addToken="no">
+    <cflocation url="/login.cfm" addToken="no">
 </cfif>
 <html lang="en">
 	<head>
@@ -13,8 +13,8 @@
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body class="container-fluid p-0 d-flex flex-column align-items-center">
-		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-center bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
-            <a class="flex-grow-1 navbar-brand ms-2" href="/home">
+		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-3 fw-bold fixed-top" data-bs-theme="dark">
+            <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
                 ShopKart
             </a>
