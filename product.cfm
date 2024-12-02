@@ -59,12 +59,12 @@
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a class="text-decoration-none" href="/home">Home</a></li>
                         <li class="breadcrumb-item">
-                            <a class="text-decoration-none" href="/home/category-#breadcrumbCat[1].id#">
+                            <a class="text-decoration-none" href="/index.cfm?cat=#breadcrumbCat[1].id#">
                                 #breadcrumbCat[1].name#
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a class="text-decoration-none" href="/home/category-#breadcrumbCat[1].id#/subcategory-#breadcrumbSub[1].id#">
+                            <a class="text-decoration-none" href="/index.cfm?cat=#breadcrumbCat[1].id#&subcategory=#breadcrumbSub[1].id#">
                                 #breadcrumbSub[1].name#
                             </a>
                         </li>

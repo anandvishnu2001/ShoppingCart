@@ -186,7 +186,7 @@
             <cfif arrayLen(products) NEQ 0>
                 <cfloop array="#products#" item="product">
                     <cfoutput>
-                        <a class="card bg-light text-decoration-none fw-bold col-3 p-3" href="product.cfm?pro=#product.id#">
+                        <a class="card bg-light text-decoration-none fw-bold col-3 p-3" href="product/#product.id#">
                             <div class="card-body d-flex row flex-wrap">
                                 <div id="productpic#product.id#" class="card-img col-md-6 w-50 carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
