@@ -175,9 +175,11 @@
                 </form>
             </div>
             <cfoutput>
-                <cfset variables.url = cgi.HTTP_URL>
-                <cfset variables.url = REReplace(variables.url, "[&?]sort=[^&]*", "", "all")>
-                <cfset variables.url = variables.url & (find('?', variables.url) ? '&' : '?')>
+                <cfset variables.url = "/index.cfm?">
+                <cfif len(cgi.Query_String) NEQ 0>
+                    <cfset variables.querystring = REReplace(cgi.Query_String, "[&?]sort=[^&]*", "", "all")>
+                    <cfset variables.url = variables.url & variables.querystring & "&">
+                </cfif>
                 <a href="#variables.url#sort=pricelow" class="btn btn-success">Low to High</a>
                 <a href="#variables.url#sort=pricehigh" class="btn btn-success">High to Low</a>
             </cfoutput>
