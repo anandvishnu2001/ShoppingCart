@@ -139,16 +139,16 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="/images/banner-1.jpg" alt="Product image" class="d-block w-100">
-                    <div class="carousel-caption w-25 d-none d-md-block mx-auto my-5">
-                        <h3 class="card">Welcome to the ShopKart</h3>
+                    <img src="/images/banner-1.jpg" alt="Banner image" class="d-block w-100">
+                    <div class="carousel-caption w-25 d-none d-md-block mx-auto my-5" data-bs-theme="light">
+                        <h3 class="card">Welcome to ShopKart</h3>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="/images/banner-2.jpg" alt="Product image" class="d-block w-100">
+                    <img src="/images/banner-2.jpg" alt="Banner image" class="d-block w-100">
                 </div>
                 <div class="carousel-item">
-                    <img src="/images/banner-3.jpg" alt="Product image" class="d-block w-100">
+                    <img src="/images/banner-3.jpg" alt="Banner image" class="d-block w-100">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
