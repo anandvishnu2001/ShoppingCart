@@ -406,52 +406,46 @@
         <cfargument  name="status" type="string" required="false">
         <cfquery name="local.list">
             SELECT
-                productid,
-                name,
-                description,
-                price,
-                tax,
-                status,
-                createdat,
-                lasteditedat,
-                createdby,
-                lasteditedby,
-                subcategoryid
+                p.productid,
+                p.name,
+                p.description,
+                p.price,
+                p.tax,
+                p.status,
+                p.createdat,
+                p.lasteditedat,
+                p.createdby,
+                p.lasteditedby,
+                p.subcategoryid
             FROM
-                product
+                product p
+            INNER JOIN
+                subcategory s ON s.subcategoryid = p.subcategoryid
             WHERE
+                1=1
                 <cfif NOT structKeyExists(arguments, 'status')>
-                    status = 1
+                    AND
+                        p.status = 1
                 </cfif>
                 <cfif structKeyExists(arguments, 'category')>
                     AND
-                        subcategoryid IN (
-                            SELECT
-                                subcategoryid
-                            FROM
-                                subcategory
-                            WHERE
-                                categoryid = <cfqueryparam value="#arguments.category#" cfsqltype="cf_sql_integer">
-                        )
+                        s.categoryid = <cfqueryparam value="#arguments.category#" cfsqltype="cf_sql_integer">
                 <cfelseif structKeyExists(arguments, 'subcategory')>
                     AND
-                        subcategoryid = <cfqueryparam value="#arguments.subcategory#" cfsqltype="cf_sql_integer">
+                        p.subcategoryid = <cfqueryparam value="#arguments.subcategory#" cfsqltype="cf_sql_integer">
                 </cfif>
                 <cfif structKeyExists(arguments, 'product')>
-                    <cfif NOT structKeyExists(arguments, 'status')>
-                        AND
-                    </cfif>
-                        productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
+                    AND
+                        p.productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
                 </cfif>
                 <cfif structKeyExists(arguments, 'search') AND arguments.search GT 0>
                     AND
-                        name LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
+                        p.name LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
                 </cfif>
                 <cfif structKeyExists(arguments, 'range')>
                     <cfif listLen(arguments.range) EQ 2>
                         <cfset local.rangeArray = listToArray(arguments.range)>
-                        <cfif local.rangeArray[1] NEQ 'MIN'
-                            AND local.rangeArray[2] NEQ 'MAX'>
+                        <cfif local.rangeArray[1] NEQ 'MIN' AND local.rangeArray[2] NEQ 'MAX'>
                                 AND
                                     price
                                         BETWEEN
@@ -470,14 +464,14 @@
                 <cfif structKeyExists(arguments, 'sort')>
                     <cfif arguments.sort EQ 'random'>
                         ORDER BY RAND()
-                        <cfif NOT structKeyExists(arguments, 'range')>
-                            LIMIT 6
-                        </cfif>
                     <cfelseif arguments.sort EQ 'pricelow'>
                         ORDER BY price ASC
                     <cfelseif arguments.sort EQ 'pricehigh'>
                         ORDER BY price DESC
                     </cfif>
+                </cfif>
+                <cfif NOT structKeyExists(arguments, 'range')>
+                    LIMIT 6
                 </cfif>
             ;
         </cfquery>
