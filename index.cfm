@@ -11,24 +11,19 @@
     <cfset argumentCollection.sort = url.sort>
 <cfelse>
     <cfset argumentCollection.sort = 'random'>
+    <cfset argumentCollection.limit = 6>
 </cfif>
 <cfif structKeyExists(url, 'filter')
     AND ((structKeyExists(url, 'minPrice')
             AND len(url.minPrice) GT 0)
         OR (structKeyExists(url, 'maxPrice')
             AND len(url.maxPrice) GT 0))>
-    <cfset variables.range = []>
     <cfif len(url.minPrice) GT 0>
-        <cfset arrayAppend(variables.range, trim(url.minPrice))>
-    <cfelse>
-        <cfset arrayAppend(variables.range, 'MIN')>
+        <cfset argumentCollection.minRange = url.minPrice>
     </cfif>
     <cfif len(url.maxPrice) GT 0>
-        <cfset arrayAppend(variables.range, trim(url.maxPrice))>
-    <cfelse>
-        <cfset arrayAppend(variables.range, 'MAX')>
+        <cfset argumentCollection.maxRange = url.maxPrice>
     </cfif>
-    <cfset argumentCollection.range = variables.range>
 </cfif>
 <cfif structKeyExists(url, 'keyword')>
     <cfset argumentCollection.search = url.keyword>

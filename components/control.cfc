@@ -405,7 +405,9 @@
         <cfargument  name="product" type="integer" required="false">
         <cfargument  name="search" type="string" required="false">
         <cfargument  name="sort" type="string" required="false">
-        <cfargument  name="range" type="array" required="false">
+        <cfargument  name="limit" type="numeric" required="false">
+        <cfargument  name="maxRange" type="string" required="false">
+        <cfargument  name="minRange" type="string" required="false">
         <cfargument  name="status" type="string" required="false">
         <cfquery name="local.list">
             SELECT
@@ -430,12 +432,12 @@
                     AND
                         p.status = 1
                 </cfif>
-                <cfif structKeyExists(arguments, 'category')>
-                    AND
-                        s.categoryid = <cfqueryparam value="#arguments.category#" cfsqltype="cf_sql_integer">
-                <cfelseif structKeyExists(arguments, 'subcategory')>
+                <cfif structKeyExists(arguments, 'subcategory')>
                     AND
                         p.subcategoryid = <cfqueryparam value="#arguments.subcategory#" cfsqltype="cf_sql_integer">
+                <cfelseif structKeyExists(arguments, 'category')>
+                    AND
+                        s.categoryid = <cfqueryparam value="#arguments.category#" cfsqltype="cf_sql_integer">
                 </cfif>
                 <cfif structKeyExists(arguments, 'product')>
                     AND
@@ -445,35 +447,26 @@
                     AND
                         CONCAT(p.name, p.description) LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
                 </cfif>
-                <cfif structKeyExists(arguments, 'range') AND arrayLen(arguments.range) EQ 2>
-
-                    <cfset local.lowerRange = arguments.range[1]>
-                    <cfset local.upperRange = arguments.range[2]>
-                    <cfif local.lowerRange NEQ 'MIN' AND local.upperRange NEQ 'MAX'>
-                        AND 
-                            price BETWEEN
-                                <cfqueryparam value="#local.lowerRange#" cfsqltype="cf_sql_decimal">
-                            AND 
-                                <cfqueryparam value="#local.upperRange#" cfsqltype="cf_sql_decimal">
-                    <cfelseif local.lowerRange EQ 'MIN'>
-                        AND
-                            price < <cfqueryparam value="#local.upperRange#" cfsqltype="cf_sql_decimal">
-                    <cfelseif local.upperRange EQ 'MAX'>
-                        AND
-                            price > <cfqueryparam value="#local.lowerRange#" cfsqltype="cf_sql_decimal">
-                    </cfif>
+                <cfif structKeyExists(arguments, 'minRange')>
+                    AND
+                        price >= <cfqueryparam value="#arguments.minRange#" cfsqltype="cf_sql_decimal">
+                </cfif>
+                <cfif structKeyExists(arguments, 'maxRange')>
+                    AND
+                        price <= <cfqueryparam value="#arguments.maxRange#" cfsqltype="cf_sql_decimal">
                 </cfif>
                 <cfif structKeyExists(arguments, 'sort')>
-                    <cfif arguments.sort EQ 'random'>
-                        ORDER BY RAND()
-                    <cfelseif arguments.sort EQ 'pricelow'>
-                        ORDER BY price ASC
-                    <cfelseif arguments.sort EQ 'pricehigh'>
-                        ORDER BY price DESC
+                    ORDER BY
+                        <cfif arguments.sort EQ 'pricelow'>
+                            price ASC
+                        <cfelseif arguments.sort EQ 'pricehigh'>
+                            price DESC
+                        <cfelseif arguments.sort EQ 'random'>
+                            RAND()
                     </cfif>
                 </cfif>
-                <cfif NOT structKeyExists(arguments, 'range')>
-                    LIMIT 6
+                <cfif structKeyExists(arguments, 'limit')>
+                    LIMIT <cfqueryparam value="#arguments.limit#" cfsqltype="cf_sql_integer">
                 </cfif>
             ;
         </cfquery>
