@@ -47,7 +47,7 @@
 		<link href="/css/admin.css" rel="stylesheet">
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
 	</head>
-	<body class="container-fluid p-0 d-flex flex-column align-items-center">
+	<body class="container-fluid h-100 p-0 d-flex flex-column align-items-center">
 		<nav id="main-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-primary gap-5 z-1 fw-bold fixed-top" data-bs-theme="dark">
             <a class="navbar-brand ms-2" href="/home">
                 <img src="/images/shop.png" width="40" height="40" class="img-fluid">
@@ -105,7 +105,7 @@
                         <div class="container-fluid d-flex flex-column fw-bold">
                             <cfoutput>
                                 <form class="container-fluid" action="" method="post">
-                                    <fieldset class="d-flex flex-wrap border border-2 rounded gap-5 p-3">
+                                    <fieldset class="d-flex flex-wrap border border-2 rounded gap-3 p-3">
                                         <legend>Email</legend>
                                         <div class="col-8 form-floating">
                                             <input class="flex-grow-1 form-control bg-primary text-light fw-bold" type="text" id="email" 
@@ -116,7 +116,7 @@
                                     </fieldset>
                                 </form>
                                 <form class="container-fluid" action="" method="post">
-                                    <fieldset class="d-flex flex-wrap border border-2 rounded gap-5 p-3">
+                                    <fieldset class="d-flex flex-wrap border border-2 rounded gap-3 p-3">
                                         <legend>Password</legend>
                                         <div class="col-5 form-floating">
                                             <input class="form-control bg-primary text-light fw-bold" type="password" id="currentPassword"
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                 </cfoutput>
-                <div id="address-card" class="card z-1 bg-light h-100 fw-bold">
+                <div id="address-card" class="card z-1 bg-light h-75 fw-bold">
                     <h1 class="card-header card-title text-white bg-primary">Manage Addresses</h1>
                     <div class="card-body overflow-y-scroll d-grid gap-5 m-2">
                         <cfset variables.addresses = control.getShipping(user=session.user.user)>
@@ -213,10 +213,10 @@
                                     <ul class="card-body list-group p-0">
                                         <cfloop array="#order.items#" item="item">
                                             <li class="list-group-item d-flex justify-content-between">
-                                                <div id="productpic#item.product#" class="card-img carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
+                                                <div id="productpic#item.product#" class="w-50 img-thumbnail carousel slide" data-bs-ride="carousel" data-bs-theme="dark">
                                                     <div class="carousel-inner">
                                                         <cfloop array="#item.images#" index="index" item="image">
-                                                            <div class="carousel-item <cfif index EQ 1> active</cfif>">
+                                                            <div class="carousel-item h-100 <cfif index EQ 1> active</cfif>">
                                                                 <img src="/uploads/#image.image#" alt="Product image" class="d-block w-100">
                                                             </div>
                                                         </cfloop>

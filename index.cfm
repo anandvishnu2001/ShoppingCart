@@ -17,16 +17,16 @@
             AND len(url.minPrice) GT 0)
         OR (structKeyExists(url, 'maxPrice')
             AND len(url.maxPrice) GT 0))>
-    <cfset variables.range = ''>
+    <cfset variables.range = []>
     <cfif len(url.minPrice) GT 0>
-        <cfset variables.range = listAppend(variables.range, url.minPrice)>
+        <cfset arrayAppend(variables.range, trim(url.minPrice))>
     <cfelse>
-        <cfset variables.range = listAppend(variables.range, 'MIN')>
+        <cfset arrayAppend(variables.range, 'MIN')>
     </cfif>
     <cfif len(url.maxPrice) GT 0>
-        <cfset variables.range = listAppend(variables.range, url.maxPrice)>
+        <cfset arrayAppend(variables.range, trim(url.maxPrice))>
     <cfelse>
-        <cfset variables.range = listAppend(variables.range, 'MAX')>
+        <cfset arrayAppend(variables.range, 'MAX')>
     </cfif>
     <cfset argumentCollection.range = variables.range>
 </cfif>

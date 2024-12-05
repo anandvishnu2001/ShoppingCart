@@ -321,10 +321,13 @@
             SET
                 status = 0
             WHERE
+                1=1
                 <cfif structKeyExists(arguments, 'image')>
-                    imageid = <cfqueryparam value="#arguments.image#" cfsqltype="cf_sql_integer">
+                    AND
+                        imageid = <cfqueryparam value="#arguments.image#" cfsqltype="cf_sql_integer">
                 <cfelseif structKeyExists(arguments, 'product')>
-                    productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
+                    AND
+                        productid = <cfqueryparam value="#arguments.product#" cfsqltype="cf_sql_integer">
                 </cfif>
         </cfquery>
     </cffunction>
@@ -402,7 +405,7 @@
         <cfargument  name="product" type="integer" required="false">
         <cfargument  name="search" type="string" required="false">
         <cfargument  name="sort" type="string" required="false">
-        <cfargument  name="range" type="string" required="false">
+        <cfargument  name="range" type="array" required="false">
         <cfargument  name="status" type="string" required="false">
         <cfquery name="local.list">
             SELECT
@@ -422,7 +425,7 @@
             INNER JOIN
                 subcategory s ON s.subcategoryid = p.subcategoryid
             WHERE
-                1=1
+                1 = 1
                 <cfif NOT structKeyExists(arguments, 'status')>
                     AND
                         p.status = 1
@@ -440,25 +443,24 @@
                 </cfif>
                 <cfif structKeyExists(arguments, 'search') AND arguments.search GT 0>
                     AND
-                        p.name LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
+                        CONCAT(p.name, p.description) LIKE <cfqueryparam value="%#arguments.search#%" cfsqltype="cf_sql_varchar">
                 </cfif>
-                <cfif structKeyExists(arguments, 'range')>
-                    <cfif listLen(arguments.range) EQ 2>
-                        <cfset local.rangeArray = listToArray(arguments.range)>
-                        <cfif local.rangeArray[1] NEQ 'MIN' AND local.rangeArray[2] NEQ 'MAX'>
-                                AND
-                                    price
-                                        BETWEEN
-                                            <cfqueryparam value="#local.rangeArray[1]#" cfsqltype="cf_sql_decimal">
-                                        AND
-                                            <cfqueryparam value="#local.rangeArray[2]#" cfsqltype="cf_sql_decimal">
-                        <cfelseif local.rangeArray[1] EQ 'MIN'>
-                            AND
-                                price < <cfqueryparam value="#local.rangeArray[2]#" cfsqltype="cf_sql_decimal">
-                        <cfelseif local.rangeArray[2] EQ 'MAX'>
-                            AND
-                                price > <cfqueryparam value="#local.rangeArray[1]#" cfsqltype="cf_sql_decimal">
-                        </cfif>
+                <cfif structKeyExists(arguments, 'range') AND arrayLen(arguments.range) EQ 2>
+
+                    <cfset local.lowerRange = arguments.range[1]>
+                    <cfset local.upperRange = arguments.range[2]>
+                    <cfif local.lowerRange NEQ 'MIN' AND local.upperRange NEQ 'MAX'>
+                        AND 
+                            price BETWEEN
+                                <cfqueryparam value="#local.lowerRange#" cfsqltype="cf_sql_decimal">
+                            AND 
+                                <cfqueryparam value="#local.upperRange#" cfsqltype="cf_sql_decimal">
+                    <cfelseif local.lowerRange EQ 'MIN'>
+                        AND
+                            price < <cfqueryparam value="#local.upperRange#" cfsqltype="cf_sql_decimal">
+                    <cfelseif local.upperRange EQ 'MAX'>
+                        AND
+                            price > <cfqueryparam value="#local.lowerRange#" cfsqltype="cf_sql_decimal">
                     </cfif>
                 </cfif>
                 <cfif structKeyExists(arguments, 'sort')>
@@ -486,7 +488,7 @@
                 WHERE
                     status = 1
                 AND
-                    productid = <cfqueryparam value="#local.list.productid#" cfsqltype="cf_sql_decimal">
+                    productid = <cfqueryparam value="#local.list.productid#" cfsqltype="cf_sql_integer">
             </cfquery>
             <cfset local.images = []>
             <cfloop query="local.image">
