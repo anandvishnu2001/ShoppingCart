@@ -1,11 +1,10 @@
-<cfset control = CreateObject("component", "components.control")>
 <cfif structKeyExists(session, 'user') 
     AND session.user.access>
     <cfif NOT structKeyExists(url, 'order')>
         <cflocation url="/index.cfm" addToken="no">
     </cfif>
 <cfelse>
-    <cflocation url="/login.cfm" addToken="no">
+    <cflocation url="/log" addToken="no">
 </cfif>
 <html lang="en">
 	<head>

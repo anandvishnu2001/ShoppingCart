@@ -1,11 +1,3 @@
-<cfset control = CreateObject("component", "components.control")>
-<cfif NOT (structKeyExists(session, "user") 
-    AND session.user.access)>
-        <cfset session.user = {
-            "access" = false
-        }>
-<cfelse>
-</cfif>
 <cfset argumentCollection = {}>
 <cfif structKeyExists(url, 'sort')>
     <cfset argumentCollection.sort = url.sort>
@@ -32,7 +24,7 @@
 <cfelseif structKeyExists(url, 'cat')>
     <cfset argumentCollection.category = url.cat>
 </cfif>
-<cfset products = control.getProduct(argumentCollection=argumentCollection)>
+<cfset products = application.control.getProduct(argumentCollection=argumentCollection)>
 <html lang="en">
 	<head>
 		<link href="/css/admin.css" rel="stylesheet">
@@ -56,7 +48,7 @@
                         <img src="/images/menu.png" class="img-fluid" alt="Cart" width="30" height="30">
                     </a>
                     <ul class="dropdown-menu">
-                        <cfset categories = control.getCategory()>
+                        <cfset categories = application.control.getCategory()>
                         <cfloop array="#categories#" index="index" item="item">
                             <cfoutput>
                                 <li>
@@ -70,9 +62,9 @@
                     <a class="nav-link" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
-                            AND control.countCart() GT 0>
+                            AND application.control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
+                                <span class="badge bg-danger rounded-pill">#application.control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -86,7 +78,7 @@
                                 </cfoutput>
                             </a>
                     <cfelse>
-                        <a class="nav-link" href="login.cfm">
+                        <a class="nav-link" href="log">
                             <img src="/images/login.png" class="img-fluid" alt="Login" width="30" height="30">
                         </a>
                     </cfif>
@@ -96,7 +88,7 @@
         <cfif structKeyExists(url, 'cat')>
             <nav id="category-nav" class="container-fluid navbar navbar-expand-lg justify-content-between bg-secondary z-2 fixed-top" data-bs-theme="dark">
                 <ul class="flex-grow-1 navbar-nav nav-tabs nav-justified">
-                    <cfset categories = control.getCategory()>
+                    <cfset categories = application.control.getCategory()>
                     <cfloop array="#categories#" item="category">
                         <cfoutput>
                             <li class="nav-item dropdown">
@@ -108,7 +100,7 @@
                                     #category.name#
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <cfset subcategories = control.getSubcategory(category.id)>
+                                    <cfset subcategories = application.control.getSubcategory(category.id)>
                                     <cfloop array="#subcategories#" item="subcategory">
                                         <cfoutput>
                                             <li>

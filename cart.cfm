@@ -1,11 +1,3 @@
-<cfset control = CreateObject("component", "components.control")>
-<cfif NOT structKeyExists(session, 'user')
-    OR (structKeyExists(session, 'user')
-        AND NOT session.user.access)>
-            <cfset session.user = {
-                "access" = false
-            }>
-</cfif>
 <cfif structKeyExists(form, 'dltbtn') OR structKeyExists(url, 'action')>
     <cfset argumentCollection = {}>
     <cfif structKeyExists(form, 'dltbtn')>
@@ -20,15 +12,15 @@
             <cfset argumentCollection.product = url.id>
         </cfif>
     </cfif>
-    <cfset control.editCart(argumentCollection=argumentCollection)>
+    <cfset application.control.editCart(argumentCollection=argumentCollection)>
     <cflocation  url="/cart" addToken="no">
 </cfif>
 <cfif session.user.access>
     <cfif structKeyExists(url, 'pro')>
-        <cfset control.addCart(product=url.pro,user=session.user.user)>
+        <cfset application.control.addCart(product=url.pro,user=session.user.user)>
         <cflocation  url="/cart" addToken="no">
     </cfif>
-    <cfset variables.carter = control.getCart(session.user.user)>
+    <cfset variables.carter = application.control.getCart(session.user.user)>
 <cfelse>
     <cfset variables.carter = {}>
 </cfif>
@@ -48,9 +40,9 @@
                     <a class="nav-link active" href="/cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
-                            AND control.countCart() GT 0>
+                            AND application.control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
+                                <span class="badge bg-danger rounded-pill">#application.control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -64,7 +56,7 @@
                                 </cfoutput>
                             </a>
                     <cfelse>
-                        <a class="nav-link" href="/login.cfm">
+                        <a class="nav-link" href="/log">
                             <img src="/images/login.png" class="img-fluid" alt="Login" width="30" height="30">
                         </a>
                     </cfif>
@@ -132,9 +124,9 @@
                             <h3 class="text-center text-muted">Login to see your items</h3>
                             <a class="btn btn-outline-success btn-block"
                                 <cfif structKeyExists(url, 'pro')>
-                                    <cfoutput>href="/login.cfm?pro=#url.pro#&site=cart"</cfoutput>
+                                    <cfoutput>href="/log/cart/#url.pro#"</cfoutput>
                                 <cfelse>
-                                    href="/login.cfm"
+                                    href="/log/cart"
                                 </cfif>
                                 >
                                 Login

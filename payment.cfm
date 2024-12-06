@@ -1,12 +1,3 @@
-<cfset control = CreateObject("component", "components.control")>
-<cfif structKeyExists(session, 'user') 
-    AND session.user.access>
-    <cfset variables.carter = control.getCart(session.user.user)>
-<cfelseif structKeyExists(url, 'pro')>
-    <cflocation url="/login.cfm?pro=#url.pro#&site=pay" addToken="no">
-<cfelse>
-    <cflocation url="/login.cfm" addToken="no">
-</cfif>
 <cfif structKeyExists(form, 'okbtn')>
     <cfset variables.shipping = {
         'name' = form.name,
@@ -19,7 +10,7 @@
         'pincode' = form.pincode,
         'user' = session.user.user
     }>
-    <cfset variables.error = control.modifyShipping(data=variables.shipping)>
+    <cfset variables.error = application.control.modifyShipping(data=variables.shipping)>
     <cfif arrayLen(variables.error) NEQ 0>
         <nav class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -39,7 +30,7 @@
         'address' = form.shippingAddress,
         'user' = session.user.user
     }>
-    <cfset variables.output = control.payOrder(variables.order)>
+    <cfset variables.output = application.control.payOrder(variables.order)>
     <cfdump  var="#variables.output#">
     <cfif arrayLen(variables.output.error) EQ 0 AND structKeyExists(variables.output, 'order')>
         <cflocation  url="/confirm.cfm?order=#variables.output.order#" addToken="no">
@@ -70,7 +61,7 @@
                 <div class="card h-75 bg-light p-3">
                     <h2 class="card-header fw-bold text-primary">Shipping Address</h2>
                     <ul class="card-body overflow-y-scroll list-group d-flex flex-column p-1 gap-3">
-                        <cfset variables.addresses = control.getShipping(user=session.user.user)>
+                        <cfset variables.addresses = application.control.getShipping(user=session.user.user)>
                         <cfif arrayLen(variables.addresses) GT 0>
                             <cfloop array="#variables.addresses#" item="address">
                                 <cfoutput>
@@ -101,10 +92,11 @@
                 </div>
                 <div class="card h-75 bg-light fw-bold p-3">
                     <h2 class="card-header fw-bold text-primary">Order Details</h2>
+                    <cfset variables.carter = application.control.getCart(session.user.user)>
                     <cfset variables.orderTotal = 0>
                     <cfset variables.orderTax = 0>
                     <cfif structKeyExists(url, 'pro')>
-                        <cfset variables.orderItem = control.getProduct(product=url.pro)>
+                        <cfset variables.orderItem = application.control.getProduct(product=url.pro)>
                         <cfoutput>
                             <div class="card-body d-flex flex-row flex-wrap justify-content-evenly">
                                 <div id="productpic#variables.orderItem[1].id#" class="card-img w-25 carousel slide" data-bs-ride="carousel" data-bs-theme="dark">

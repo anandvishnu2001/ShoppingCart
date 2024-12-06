@@ -4,8 +4,7 @@
 
     <cfcontent type="application/pdf" reset="true">
 
-    <cfset control = CreateObject("component", "components.control")>
-    <cfset variables.orders = control.getOrder(order=url.order)>
+    <cfset variables.orders = application.control.getOrder(order=url.order)>
     
     <cfdocument format="PDF" orientation="portrait">
     

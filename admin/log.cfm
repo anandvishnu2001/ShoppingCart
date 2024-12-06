@@ -1,19 +1,9 @@
+<cfif structKeyExists(form, "btn")>
+	<cfset application.control.adminLogin(admin=form.admin, password=form.password)>
+</cfif>
 <cfif structKeyExists(session, "check") 
     AND session.check.access>
 	    <cflocation url="admin-home.cfm" addToken="no">
-<cfelse>
-	<cfset session.check = {
-        "access" = false
-    }>
-</cfif>
-<cfif structKeyExists(form, "btn")>
-    <cfset control = CreateObject("component", "components.control")>
-	<cfset control.adminLogin(admin=form.admin, password=form.password)>
-    <cfif session.check.access>
-		<cflocation url="admin-home.cfm" addToken="no">
-	<cfelse>
-		<cflocation url="index.cfm" addToken="no">
-	</cfif>
 </cfif>
 <html lang="en">
 	<head>

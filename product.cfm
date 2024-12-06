@@ -1,13 +1,5 @@
-<cfset control = CreateObject("component", "components.control")>
-<cfif NOT structKeyExists(session, 'user')
-    OR (structKeyExists(session, 'user')
-        AND NOT session.user.access)>
-            <cfset session.user = {
-                "access" = false
-            }>
-</cfif>
 <cfif structKeyExists(url, 'pro')>
-    <cfset products = control.getProduct(product=url.pro)>
+    <cfset products = application.control.getProduct(product=url.pro)>
 <cfelse>
     <cflocation  url="/home" addToken="no">
 </cfif>
@@ -28,9 +20,9 @@
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session, 'user')
                             AND session.user.access
-                            AND control.countCart() GT 0>
+                            AND application.control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
+                                <span class="badge bg-danger rounded-pill">#application.control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
@@ -44,7 +36,7 @@
                                 </cfoutput>
                             </a>
                     <cfelse>
-                        <a class="nav-link" href="/login.cfm">
+                        <a class="nav-link" href="/log">
                             <img src="/images/login.png" class="img-fluid" alt="Login" width="30" height="30">
                         </a>
                     </cfif>
@@ -54,8 +46,8 @@
         <div class="container-fluid d-flex flex-row flex-wrap justify-content-evenly mt-5 gap-5 p-5">
             <cfoutput>
                 <div class="container d-flex justify-content-center p-3 gap-5">
-                    <cfset breadcrumbSub = control.getSubcategory(subcategory=products[1].subcategory)>
-                    <cfset breadcrumbCat = control.getCategory(category=breadcrumbSub[1].category)>
+                    <cfset breadcrumbSub = application.control.getSubcategory(subcategory=products[1].subcategory)>
+                    <cfset breadcrumbCat = application.control.getCategory(category=breadcrumbSub[1].category)>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a class="text-decoration-none" href="/home">Home</a></li>
                         <li class="breadcrumb-item">
@@ -96,7 +88,12 @@
                                 <a class="card-link btn btn-success" href="/cart/#products[1].id#">
                                     Add to <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                                 </a>
-                                <a class="card-link btn btn-success" href="/payment/#products[1].id#">
+                                <a class="card-link btn btn-success"
+                                    <cfif structKeyExists(session, "user") AND session.user.access>
+                                        href="/payment/#products[1].id#"
+                                    <cfelse>
+                                        href="/log/pay/#products[1].id#"
+                                    </cfif>>
                                     Buy Now
                                 </a>
                             </div>

@@ -1,25 +1,19 @@
-<cfif NOT structKeyExists(session, "check") 
-    OR NOT session.check.access
-    OR structKeyExists(url, "logout")>
-        <cfif structKeyExists(url, "logout")
-            AND url.logout EQ 1>
-                <cfset structClear(session.check)>
-        </cfif>
+<cfif structKeyExists(url, "logout") AND url.logout EQ 1>
+    <cfset structClear(session.check)>
     <cfset session.check = {
         "access" = false
     }>
-    <cflocation url="index.cfm" addToken="no">
+    <cflocation  url="/admin/log" addToken="no">
 </cfif>
-<cfset control = CreateObject("component", "components.control")>
 <cfif structKeyExists(form, 'okbtn')>
-    <cfset variables.input = control.validate(form)>
+    <cfset variables.input = application.control.validate(form)>
     <cfif arrayLen(variables.input.message) EQ 0>
         <cfif structKeyExists(variables.input.data, 'category')>
-            <cfset control.modifyCategory(variables.input.data)>
+            <cfset application.control.modifyCategory(variables.input.data)>
         <cfelseif  structKeyExists(variables.input.data, 'subcategory')>
-            <cfset control.modifySubcategory(variables.input.data)>
+            <cfset application.control.modifySubcategory(variables.input.data)>
         <cfelse>
-            <cfset control.modifyProduct(variables.input.data)>
+            <cfset application.control.modifyProduct(variables.input.data)>
         </cfif>
     <cfelse>
         <div class="row">
@@ -32,7 +26,7 @@
         "section" = form.set,
         "id" = form.recordId
     }>
-    <cfset control.deleteItem(variables.section)>
+    <cfset application.control.deleteItem(variables.section)>
 </cfif>
 <html lang="en">
 	<head>
@@ -41,7 +35,7 @@
 	</head>
 	<body class="container-fluid p-0 d-flex flex-row align-items-center">
 		<nav class="container-fluid p-1  navbar navbar-expand-lg navbar-light justify-content-between bg-success fw-bold fixed-top" data-bs-theme="dark">
-            <a class="navbar-brand text-info" href="">
+            <a class="navbar-brand text-info">
                 <img src="/images/shop.png" width="40" height="40" class="rounded-pill">
                 ShopKart
             </a>
@@ -57,7 +51,7 @@
             <div id="categories" class="card col-3 rounded-3 p-3">
                 <p class="h2 card-header card-title text-center text-success">Categories</p>
                 <div id="categorylist" class="card-body list-group">
-                    <cfset categories = control.getCategory()>
+                    <cfset categories = application.control.getCategory()>
                     <cfif arrayLen(categories) eq 0>
                         <li class="list-group-item">Category is empty</li>
                     <cfelse>
@@ -90,7 +84,7 @@
                 <cfif structKeyExists(url, 'cat')>
                     <p class="h2 card-header card-title text-center text-success">Sub categories</p>
                     <div id="subcategorylist" class="card-body list-group">
-                            <cfset categories = control.getSubcategory(category=url.cat)>
+                            <cfset categories = application.control.getSubcategory(category=url.cat)>
                             <cfif arrayLen(categories) eq 0>
                                 <li class="list-group-item">Subcategory is empty</li>
                             <cfelse>
@@ -125,7 +119,7 @@
                 <cfif structKeyExists(url, 'sub')>
                     <p class="h2 card-header card-title text-center text-success">Products</p>
                     <div id="productlist" class="card-body list-group">
-                            <cfset products = control.getProduct(subcategory=url.sub)>
+                            <cfset products = application.control.getProduct(subcategory=url.sub)>
                             <cfif arrayLen(products) eq 0>
                                 <li class="list-group-item">Subcategory is empty</li>
                             <cfelse>

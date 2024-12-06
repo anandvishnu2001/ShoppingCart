@@ -1,9 +1,6 @@
-<cfset control = CreateObject("component", "components.control")>
-<cfif NOT structKeyExists(session, "user") 
-    OR NOT session.user.access>
-        <cflocation  url="/login.cfm?log=1" addToken="no">
-<cfelse>
-    <cfset variables.carter = control.getCart(session.user.user)>
+<cfif structKeyExists(session, "user") 
+    AND session.user.access>
+        <cfset variables.carter = application.control.getCart(session.user.user)>
 </cfif>
 <cfif structKeyExists(form, 'okbtn')>
     <cfset variables.shipping = {
@@ -20,7 +17,7 @@
     <cfif structKeyExists(form, 'shippingId') AND len(form.shippingId) NEQ 0>
         <cfset variables.shipping['id'] = form.shippingId>
     </cfif>
-    <cfset variables.error = control.modifyShipping(data=variables.shipping)>
+    <cfset variables.error = application.control.modifyShipping(data=variables.shipping)>
     <cfif arrayLen(variables.error) NEQ 0>
         <nav class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -30,9 +27,9 @@
         </nav>
     </cfif>
 <cfelseif structKeyExists(form, 'dltbtn')>
-    <cfset control.deleteShipping(id=form.shippingId)>
+    <cfset application.control.deleteShipping(id=form.shippingId)>
 <cfelseif structKeyExists(form, 'emailbtn')>
-    <cfset variables.message = control.userEmailChange(user=session.user.user,email=form.email)>
+    <cfset variables.message = application.control.userEmailChange(user=session.user.user,email=form.email)>
     <cfif len(variables.message) NEQ 0>
         <nav class="alert alert-danger alert-dismissible fade show text-center mt-5 z-3 fw-bold">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -58,15 +55,15 @@
                     <a class="nav-link" href="cart">
                         <img src="/images/cart.png" class="img-fluid" alt="Cart" width="30" height="30">
                         <cfif structKeyExists(session.user, 'user')
-                            AND control.countCart() GT 0>
+                            AND application.control.countCart() GT 0>
                             <cfoutput>
-                                <span class="badge bg-danger rounded-pill">#control.countCart()#</span>
+                                <span class="badge bg-danger rounded-pill">#application.control.countCart()#</span>
                             </cfoutput>
                         </cfif>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="login.cfm?log=0">
+                    <a class="nav-link" href="log/logout">
                         <img src="/images/logout.png" class="img-fluid" alt="Login" width="30" height="30">
                     </a>
                 </li>
@@ -143,7 +140,7 @@
                 <div id="address-card" class="card z-1 bg-light h-75 fw-bold">
                     <h1 class="card-header card-title text-white bg-primary">Manage Addresses</h1>
                     <div class="card-body overflow-y-scroll d-grid gap-5 m-2">
-                        <cfset variables.addresses = control.getShipping(user=session.user.user)>
+                        <cfset variables.addresses = application.control.getShipping(user=session.user.user)>
                         <cfloop array="#variables.addresses#" item="address">
                             <cfoutput>
                                 <div class="card">
@@ -193,7 +190,7 @@
                         <cfif structKeyExists(url, 'keyword')>
                             <cfset argumentCollection.search = url.keyword>
                         </cfif>
-                        <cfset variables.orders = control.getOrder(argumentCollection=argumentCollection)>
+                        <cfset variables.orders = application.control.getOrder(argumentCollection=argumentCollection)>
                         <cfloop array="#variables.orders#" item="order">
                             <cfoutput>
                                 <div class="card">
