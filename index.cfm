@@ -149,7 +149,7 @@
             <div class="dropdown">
                 <button class="btn btn-outline-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside">Filter</button>
                 <form  class="dropdown-menu gap-2 p-3" action="" method="get">
-                    <p>Filter By Price<p>
+                    <h5 class="dropdown-header">Filter By Price</h5>
                     <div class="form-floating">
                         <input class="form-control bg-primary" type="number" name="minPrice" id="minPrice" min="0" placeholder="">
                         <label class="form-label" for="minPrice">Minimum</label>
@@ -158,7 +158,7 @@
                         <input class="form-control bg-primary" type="number" name="maxPrice" id="maxPrice" placeholder="">
                         <label class="form-label" for="maxPrice">Maximum</label>
                     </div>
-                    <button name="filter" id="filter" type="submit" value="price" class="btn btn-outline-success">Filter</button>
+                    <button name="filter" id="filter" type="submit" value="price" class="dropdown-item btn rounded bg-success">Filter</button>
                 </form>
             </div>
             <cfoutput>
@@ -167,8 +167,8 @@
                     <cfset variables.querystring = REReplace(cgi.Query_String, "[&?]sort=[^&]*", "", "all")>
                     <cfset variables.url = variables.url & variables.querystring & "&">
                 </cfif>
-                <a href="#variables.url#sort=pricelow" class="btn btn-success">Low to High</a>
-                <a href="#variables.url#sort=pricehigh" class="btn btn-success">High to Low</a>
+                <a href="#variables.url#sort=pricelow" class="btn btn-outline-primary">Low to High</a>
+                <a href="#variables.url#sort=pricehigh" class="btn btn-outline-primary">High to Low</a>
             </cfoutput>
         </div>
         <div class="container-fluid d-flex flex-row flex-wrap justify-content-evenly gap-5 p-5">
